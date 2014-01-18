@@ -36,7 +36,7 @@ public class CanvasView extends android.view.View {
 		System.out.println("check6");
 		//newBitmap = null; 
 		 bmpOut = 
-				 Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), 
+				 Bitmap.createBitmap(myBitmap.getWidth(),myBitmap.getHeight(), 
 				 Bitmap.Config.ARGB_8888); 
 		 System.out.println("check7");
 		Utils.matToBitmap(circleImage, bmpOut);
