@@ -20,51 +20,53 @@ public class CanvasView extends android.view.View {
 
 	private Bitmap bmpOut, myBitmap;
 	private Paint p = new Paint();
+
 	public CanvasView(Context context) {
 		super(context);
 		Mat mImg = new Mat();
-		myBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.test);
+		myBitmap = BitmapFactory.decodeResource(getResources(),
+				R.drawable.test4);
+		bmpOut = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(),
+				Bitmap.Config.ARGB_8888);
+		
 		Utils.bitmapToMat(myBitmap, mImg);
+
+		// Convert to gray scale
 		Mat mGray = new Mat(mImg.rows(), mImg.cols(), CvType.CV_8UC1);
 		Imgproc.cvtColor(mImg, mGray, Imgproc.COLOR_BGRA2GRAY);
-		Imgproc.GaussianBlur(mGray, mGray, new Size(9, 9), 2, 2);
+		
+		Mat mCanny = new Mat(mGray.rows(), mGray.cols(), CvType.CV_8UC1);
+		
+		// Add Gaussian blur to reduce noise
+		Imgproc.GaussianBlur(mGray, mGray, new Size(7, 7), 0, 0);
+		
+		//Edge detection
+		Imgproc.Canny(mGray, mCanny, 125d, 250d, 3, false);
+
+		// Obtain an array with circles using Hough Transform algorithm
 		Mat circleImage = new Mat(mGray.rows(), mGray.cols(), CvType.CV_8UC1);
 		Imgproc.HoughCircles(mGray, circleImage, Imgproc.CV_HOUGH_GRADIENT, 1d,
-		         (double) mGray.height() / 70);
-		System.out.println(circleImage.dump());
-//		System.out.println("check6");
-		//newBitmap = null; 
-		if (circleImage.rows() == 1){
-			for (int i = 0; i < circleImage.cols(); i++){
-				//System.out.println(circleImage.get(0, i));
-				System.out.println(circleImage.get(0, i)[0] + ", " + circleImage.get(0, i)[1] + ", " + circleImage.get(0, i)[2]);
-				Core.circle(mImg, new Point(circleImage.get(0, i)[0], circleImage.get(0, i)[1]), (int) circleImage.get(0, i)[2], new Scalar(1.0, 0.0, 0.0, 1.0), 5);
+				(double) mGray.height() / 3, 250d, 100d, 10, 400);
+
+		if (circleImage.rows() == 1) {
+			System.out.println("circleImage.cols(): " + circleImage.cols());
+			for (int i = 0; i < circleImage.cols(); i++) {
+				Core.circle(mImg, new Point(circleImage.get(0, i)[0],
+						circleImage.get(0, i)[1]),
+						(int) circleImage.get(0, i)[2], new Scalar(255d, 0d,
+								0d), 2);
 			}
 		}
-		 bmpOut = 
-				 Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(), 
-				 Bitmap.Config.ARGB_8888); 
-//		 System.out.println(circleImage.cols() + " " + circleImage.rows());
-		 Utils.matToBitmap(mImg, bmpOut);
-		//Utils.matToBitmap(circleImage, bmpOut);
-		System.out.println("check8");
-		// TODO Auto-generated constructor stub
 
+		// Convert back to a bitmap suitable for drawing
+		Utils.matToBitmap(mImg, bmpOut);
 	}
 
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		//File imgFile = new File(Environment.getExternalStorageDirectory() + "/test.jpg");
-		//System.out.println(Environment.getExternalStorageDirectory());
-		//Resources r = getResources();
-		//System.out.println(r.toString());
-		//R.drawable.map;
-//		canvas.drawColor(Color.WHITE);
-//		Paint paint = new Paint();
-//		paint.setStyle(Paint.Style.FILL);
-//		canvas.drawCircle(20, 32, 20, paint);
-		System.out.println("checkDraw");
-        canvas.drawBitmap(bmpOut, 0, 0, p);
+
+		// Render the output
+		canvas.drawBitmap(bmpOut, 0, 0, p);
 
 	}
 
