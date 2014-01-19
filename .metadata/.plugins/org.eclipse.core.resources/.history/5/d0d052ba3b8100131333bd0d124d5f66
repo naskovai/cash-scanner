@@ -22,13 +22,13 @@ public class CanvasView extends android.view.View {
 	private Bitmap bmpOut, myBitmap;
 	private Paint p = new Paint();
 
-	private Mat[] getCirclesMatrices(final Mat originalImage, final Mat circles) {
+	private Mat[] getCirclesMatrices(final Mat inputMatrix, final Mat circles) {
 		int radius = 0;
 		int left = 0;
 		int right = 0;
 		int top = 0;
 		int bottom = 0;
-		
+
 		Mat[] outMatrices = new Mat[circles.cols()];
 		System.out.println("circles.cols(): " + circles.cols());
 		if (circles.rows() == 1) {
@@ -36,13 +36,19 @@ public class CanvasView extends android.view.View {
 				radius = (int) circles.get(0, i)[2];
 				left = (int) circles.get(0, i)[0] - radius;
 				right = (int) circles.get(0, i)[0] + radius;
-				top = (int) circles.get(0, i)[1] - radius;
-				bottom = (int) circles.get(0, i)[1] + radius;
-				
-				outMatrices[i] = originalImage.submat(new Range(top, bottom), new Range(left, right));
+				top = (int) circles.get(0, i)[1] + radius;
+				bottom = (int) circles.get(0, i)[1] - radius;
+
+				System.out.println("matrix " + i);
+				outMatrices[i] = inputMatrix.submat(new Range(left, right),
+						new Range(top, bottom));
 			}
 		}
 
+		for (int i = 0; i < outMatrices.length; i++) {
+			System.out.println(outMatrices[i].dump());
+		}
+		
 		return outMatrices;
 	}
 
@@ -69,21 +75,21 @@ public class CanvasView extends android.view.View {
 		Imgproc.Canny(mGray, mCanny, 125d, 250d, 3, false);
 
 		// Obtain an array with circles using Hough Transform algorithm
-		Mat circles = new Mat();
-		Imgproc.HoughCircles(mGray, circles, Imgproc.CV_HOUGH_GRADIENT, 1d,
+		Mat circleImage = new Mat(mGray.rows(), mGray.cols(), CvType.CV_8UC1);
+		Imgproc.HoughCircles(mGray, circleImage, Imgproc.CV_HOUGH_GRADIENT, 1d,
 				(double) mGray.height() / 10, 250d, 100d, 10, 400);
 
-		if (circles.rows() == 1) {
-			System.out.println("circleImage.cols(): " + circles.cols());
-			for (int i = 0; i < circles.cols(); i++) {
-				Core.circle(mImg, new Point(circles.get(0, i)[0],
-						circles.get(0, i)[1]),
-						(int) circles.get(0, i)[2],
+		if (circleImage.rows() == 1) {
+			System.out.println("circleImage.cols(): " + circleImage.cols());
+			for (int i = 0; i < circleImage.cols(); i++) {
+				Core.circle(mImg, new Point(circleImage.get(0, i)[0],
+						circleImage.get(0, i)[1]),
+						(int) circleImage.get(0, i)[2],
 						new Scalar(255d, 0d, 0d), 2);
 			}
 		}
 
-		Mat[] coins = getCirclesMatrices(mImg, circles);
+		Mat[] coins = getCirclesMatrices(mImg, circleImage);
 
 		System.out.println(coins.length);
 

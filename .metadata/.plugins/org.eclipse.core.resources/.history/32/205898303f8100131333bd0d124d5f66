@@ -88,7 +88,7 @@ public class CanvasView extends android.view.View {
 		System.out.println(coins.length);
 
 		// Convert back to a bitmap suitable for drawing
-		Utils.matToBitmap(mImg, bmpOut);
+		Utils.matToBitmap(coins[0], bmpOut);
 	}
 
 	protected void onDraw(Canvas canvas) {
