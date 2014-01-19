@@ -1,4 +1,0 @@
-INDEX VERSION 1.126+E:\Dev\Android\Projects\cash-scanner\.metadata\.plugins\org.eclipse.jdt.core
-3874120429.index
-1403031270.index
-3138198791.index

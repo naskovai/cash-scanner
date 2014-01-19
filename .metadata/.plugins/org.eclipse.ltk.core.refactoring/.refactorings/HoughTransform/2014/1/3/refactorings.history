@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;HoughTransform/res/drawable/Round-Web-Buttons.jpg&apos; to &apos;test.jpg&apos;" description="Rename resource &apos;Round-Web-Buttons.jpg&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="res/drawable/Round-Web-Buttons.jpg" name="test.jpg" stamp="1390084566240" updateReferences="true"/>
-</session>
