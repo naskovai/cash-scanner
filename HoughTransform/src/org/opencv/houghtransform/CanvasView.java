@@ -16,41 +16,42 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.widget.LinearLayout;
 
-public class CanvasView extends android.view.View {
+public class CanvasView extends LinearLayout {
 
 	private Bitmap bmpOut, myBitmap;
 	private Paint p = new Paint();
 
-	private Mat[] getCirclesMatrices(final Mat originalImage, final Mat circles) {
-		int radius = 0;
-		int left = 0;
-		int right = 0;
-		int top = 0;
-		int bottom = 0;
-		
-		Mat[] outMatrices = new Mat[circles.cols()];
-		System.out.println("circles.cols(): " + circles.cols());
-		if (circles.rows() == 1) {
-			for (int i = 0; i < circles.cols(); i++) {
-				radius = (int) circles.get(0, i)[2];
-				left = (int) circles.get(0, i)[0] - radius;
-				right = (int) circles.get(0, i)[0] + radius;
-				top = (int) circles.get(0, i)[1] - radius;
-				bottom = (int) circles.get(0, i)[1] + radius;
-				
-				outMatrices[i] = originalImage.submat(new Range(top, bottom), new Range(left, right));
-			}
-		}
-
-		return outMatrices;
+	public CanvasView(Context context, byte[] compressedImage) {
+		super(context);
+		init(compressedImage);
 	}
 
-	public CanvasView(Context context) {
-		super(context);
+	@Override
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+
+		// Render the output
+		System.out.println("Check Draw");
+		canvas.drawBitmap(bmpOut, 0, 0, p);
+
+	}
+
+	@Override
+	protected void dispatchDraw(Canvas canvas) {
+		super.dispatchDraw(canvas);
+		// Render the output
+		System.out.println("Check Draw");
+		canvas.drawBitmap(bmpOut, 0, 0, p);
+	}
+
+	private void init(byte[] compressedImage) {
+		
 		Mat mImg = new Mat();
 		myBitmap = BitmapFactory.decodeResource(getResources(),
-				R.drawable.test4);
+				R.drawable.test3);
+		//myBitmap = BitmapFactory.decodeByteArray(compressedImage, 0, compressedImage.length);
 		bmpOut = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(),
 				Bitmap.Config.ARGB_8888);
 
@@ -76,27 +77,41 @@ public class CanvasView extends android.view.View {
 		if (circles.rows() == 1) {
 			System.out.println("circleImage.cols(): " + circles.cols());
 			for (int i = 0; i < circles.cols(); i++) {
-				Core.circle(mImg, new Point(circles.get(0, i)[0],
-						circles.get(0, i)[1]),
-						(int) circles.get(0, i)[2],
-						new Scalar(255d, 0d, 0d), 2);
+				Core.circle(mImg,
+						new Point(circles.get(0, i)[0], circles.get(0, i)[1]),
+						(int) circles.get(0, i)[2], new Scalar(255d, 0d, 0d), 2);
 			}
 		}
 
 		Mat[] coins = getCirclesMatrices(mImg, circles);
 
-		System.out.println(coins.length);
-
 		// Convert back to a bitmap suitable for drawing
 		Utils.matToBitmap(mImg, bmpOut);
 	}
 
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
+	private Mat[] getCirclesMatrices(final Mat originalImage, final Mat circles) {
+		int radius = 0;
+		int left = 0;
+		int right = 0;
+		int top = 0;
+		int bottom = 0;
 
-		// Render the output
-		canvas.drawBitmap(bmpOut, 0, 0, p);
+		Mat[] outMatrices = new Mat[circles.cols()];
+		System.out.println("circles.cols(): " + circles.cols());
+		if (circles.rows() == 1) {
+			for (int i = 0; i < circles.cols(); i++) {
+				radius = (int) circles.get(0, i)[2];
+				left = (int) circles.get(0, i)[0] - radius;
+				right = (int) circles.get(0, i)[0] + radius;
+				top = (int) circles.get(0, i)[1] - radius;
+				bottom = (int) circles.get(0, i)[1] + radius;
 
+				outMatrices[i] = originalImage.submat(new Range(top, bottom),
+						new Range(left, right));
+			}
+		}
+
+		return outMatrices;
 	}
 
 }
