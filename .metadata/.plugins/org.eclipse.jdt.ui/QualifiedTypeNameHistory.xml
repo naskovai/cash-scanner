@@ -4,4 +4,18 @@
 <fullyQualifiedTypeName name="org.opencv.core.Core"/>
 <fullyQualifiedTypeName name="org.opencv.core.Point"/>
 <fullyQualifiedTypeName name="org.opencv.core.Scalar"/>
+<fullyQualifiedTypeName name="android.hardware.Camera"/>
+<fullyQualifiedTypeName name="android.view.SurfaceHolder"/>
+<fullyQualifiedTypeName name="org.opencv.android.JavaCameraView"/>
+<fullyQualifiedTypeName name="android.hardware.Camera.PictureCallback"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="android.view.View.OnTouchListener"/>
+<fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
+<fullyQualifiedTypeName name="android.os.Environment"/>
+<fullyQualifiedTypeName name="java.sql.Date"/>
+<fullyQualifiedTypeName name="java.util.Date"/>
+<fullyQualifiedTypeName name="android.view.WindowManager"/>
+<fullyQualifiedTypeName name="org.opencv.android.CameraBridgeViewBase"/>
+<fullyQualifiedTypeName name="android.widget.LinearLayout"/>
 </qualifiedTypeNameHistroy>
