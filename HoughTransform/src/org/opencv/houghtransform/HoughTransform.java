@@ -23,6 +23,9 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
 public class HoughTransform extends Activity implements CvCameraViewListener2, OnTouchListener, CameraCallback {
@@ -42,8 +45,8 @@ public class HoughTransform extends Activity implements CvCameraViewListener2, O
                 case LoaderCallbackInterface.SUCCESS:
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
-                    mOpenCvCameraView.enableView();
-                    mOpenCvCameraView.setOnTouchListener(HoughTransform.this);
+                    getOpenCvCameraView().enableView();
+                    getOpenCvCameraView().setOnTouchListener(HoughTransform.this);
                 } break;
                 default:
                 {
@@ -66,19 +69,18 @@ public class HoughTransform extends Activity implements CvCameraViewListener2, O
 
         setContentView(R.layout.houghtransform_surface_view);
 
-        mOpenCvCameraView = (CameraView) findViewById(R.id.houghtransform_activity_java_surface_view);
+        setOpenCvCameraView((CameraView) findViewById(R.id.houghtransform_activity_java_surface_view));
+        getOpenCvCameraView().setVisibility(SurfaceView.VISIBLE);
+        getOpenCvCameraView().setCvCameraViewListener(this);
 
-        mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
-
-        mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
+        if (getOpenCvCameraView() != null)
+            getOpenCvCameraView().disableView();
     }
 
     @Override
@@ -90,8 +92,8 @@ public class HoughTransform extends Activity implements CvCameraViewListener2, O
 
     public void onDestroy() {
         super.onDestroy();
-        if (mOpenCvCameraView != null)
-            mOpenCvCameraView.disableView();
+        if (getOpenCvCameraView() != null)
+            getOpenCvCameraView().disableView();
     }
 
     public void onCameraViewStarted(int width, int height) {
@@ -106,7 +108,7 @@ public class HoughTransform extends Activity implements CvCameraViewListener2, O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        List<String> effects = mOpenCvCameraView.getEffectList();
+        List<String> effects = getOpenCvCameraView().getEffectList();
 
         if (effects == null) {
             Log.e(TAG, "Color effects are not supported by device!");
@@ -125,7 +127,7 @@ public class HoughTransform extends Activity implements CvCameraViewListener2, O
         }
 
         mResolutionMenu = menu.addSubMenu("Resolution");
-        mResolutionList = mOpenCvCameraView.getResolutionList();
+        mResolutionList = getOpenCvCameraView().getResolutionList();
         mResolutionMenuItems = new MenuItem[mResolutionList.size()];
 
         ListIterator<Size> resolutionItr = mResolutionList.listIterator();
@@ -144,15 +146,15 @@ public class HoughTransform extends Activity implements CvCameraViewListener2, O
         Log.i(TAG, "called onOptionsItemSelected; selected item: " + item);
         if (item.getGroupId() == 1)
         {
-            mOpenCvCameraView.setEffect((String) item.getTitle());
-            Toast.makeText(this, mOpenCvCameraView.getEffect(), Toast.LENGTH_SHORT).show();
+            getOpenCvCameraView().setEffect((String) item.getTitle());
+            Toast.makeText(this, getOpenCvCameraView().getEffect(), Toast.LENGTH_SHORT).show();
         }
         else if (item.getGroupId() == 2)
         {
             int id = item.getItemId();
             Size resolution = mResolutionList.get(id);
-            mOpenCvCameraView.setResolution(resolution);
-            resolution = mOpenCvCameraView.getResolution();
+            getOpenCvCameraView().setResolution(resolution);
+            resolution = getOpenCvCameraView().getResolution();
             String caption = Integer.valueOf(resolution.width).toString() + "x" + Integer.valueOf(resolution.height).toString();
             Toast.makeText(this, caption, Toast.LENGTH_SHORT).show();
         }
@@ -164,13 +166,33 @@ public class HoughTransform extends Activity implements CvCameraViewListener2, O
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         Log.i(TAG,"onTouch event");
-        mOpenCvCameraView.takePicture();
+        getOpenCvCameraView().takePicture();
         return false;
     }
 
+    public void onReset(){
+    	System.out.println("Reset");
+    }
+    
 	@Override
 	public void onPictureTaken(final byte[] compressedImage) {
 		//setContentView(R.layout.canvas_surface_view);
-		setContentView(new CanvasView(this, compressedImage));
+		Button reset = new Button(this);
+		reset.setText("Try again");
+		reset.setOnClickListener(new ResetClickListener(this));
+		
+		LinearLayout ll = (LinearLayout) new CanvasView(this, compressedImage);
+		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		setContentView(ll);
+		
+		ll.addView(reset, lp);
+	}
+
+	public CameraView getOpenCvCameraView() {
+		return mOpenCvCameraView;
+	}
+
+	public void setOpenCvCameraView(CameraView mOpenCvCameraView) {
+		this.mOpenCvCameraView = mOpenCvCameraView;
 	}
 }
