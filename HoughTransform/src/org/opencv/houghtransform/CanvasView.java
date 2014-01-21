@@ -22,12 +22,12 @@ public class CanvasView extends LinearLayout {
 
 	private Bitmap bmpOut, myBitmap;
 	private Paint p = new Paint();
-
+	
 	public CanvasView(Context context, byte[] compressedImage) {
 		super(context);
 		init(compressedImage);
 	}
-
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -37,21 +37,14 @@ public class CanvasView extends LinearLayout {
 		canvas.drawBitmap(bmpOut, 0, 0, p);
 
 	}
-
-	@Override
-	protected void dispatchDraw(Canvas canvas) {
-		super.dispatchDraw(canvas);
-		// Render the output
-		System.out.println("Check Draw");
-		canvas.drawBitmap(bmpOut, 0, 0, p);
-	}
-
+	
 	private void init(byte[] compressedImage) {
 		
 		Mat mImg = new Mat();
-		myBitmap = BitmapFactory.decodeResource(getResources(),
-				R.drawable.test3);
-		//myBitmap = BitmapFactory.decodeByteArray(compressedImage, 0, compressedImage.length);
+//		myBitmap = BitmapFactory.decodeResource(getResources(),
+//				R.drawable.test3);
+		setWillNotDraw(false);
+		myBitmap = BitmapFactory.decodeByteArray(compressedImage, 0, compressedImage.length);
 		bmpOut = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(),
 				Bitmap.Config.ARGB_8888);
 
