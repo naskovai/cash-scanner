@@ -26,7 +26,15 @@ public class KMeansClassification {
 	}
 	
 	private Vector[] getVectors(Mat[] filterRespones) {
-		Vector[] vectors = new Vector[k];
+		Vector[] vectors = new Vector[filterRespones[0].rows() * filterRespones[0].cols()];
+		for (int i = 0; i < filterRespones[0].rows(); i++)
+			for (int j = 0; j < filterRespones[0].cols(); j++) {
+				Vector v = new Vector(filterRespones.length, new Point(i, j));
+				
+				for (int k = 0; k < filterRespones.length; k++) {
+					vectors`
+				}
+			}
 	}
 
 	private void seed(HashMap<Vector, List<Vector>> textons, int rows, int cols) {
