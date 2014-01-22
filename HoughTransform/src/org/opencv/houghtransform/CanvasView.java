@@ -43,10 +43,11 @@ public class CanvasView extends LinearLayout {
 	private void init(byte[] compressedImage) {
 		
 		Mat mImg = new Mat();
-//		myBitmap = BitmapFactory.decodeResource(getResources(),
-//				R.drawable.test7);
 		setWillNotDraw(false);
-		myBitmap = BitmapFactory.decodeByteArray(compressedImage, 0, compressedImage.length);
+		myBitmap = BitmapFactory.decodeResource(getResources(),
+				R.drawable.test7);
+		
+		//myBitmap = BitmapFactory.decodeByteArray(compressedImage, 0, compressedImage.length);
 		myBitmap = Bitmap.createScaledBitmap(myBitmap, 1280, 720, false);
 		bmpOut = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(),
 				Bitmap.Config.ARGB_8888);
@@ -56,10 +57,10 @@ public class CanvasView extends LinearLayout {
 		// Convert to gray scale
 		Mat mGray = new Mat(mImg.rows(), mImg.cols(), CvType.CV_8UC1);
 		Imgproc.cvtColor(mImg, mGray, Imgproc.COLOR_BGRA2GRAY);
-
+		
 		// Add Gaussian blur to reduce noise
 		Imgproc.GaussianBlur(mGray, mGray, new Size(7, 7), 0, 0);
-		
+
 		//Edge detection
 	    Mat grad_x = new Mat(mGray.rows(), mGray.cols(), CvType.CV_8UC1);
 	    Mat grad_y = new Mat(mGray.rows(), mGray.cols(), CvType.CV_8UC1);
@@ -77,7 +78,7 @@ public class CanvasView extends LinearLayout {
 		// Obtain an array with circles using Hough Transform algorithm
 		Mat circles = new Mat();
 		Imgproc.HoughCircles(sobelImage, circles, Imgproc.CV_HOUGH_GRADIENT, 1d,
-				(double) mGray.height() / 5, 175d, 30d, 100, mGray.height() / 3);
+				(double) mGray.height() / 5, 175d, 20d, 50, mGray.height() / 3);
 
 		if (circles.rows() == 1) {
 			System.out.println("circleImage.cols(): " + circles.cols());
@@ -93,7 +94,7 @@ public class CanvasView extends LinearLayout {
 		// Convert back to a bitmap suitable for drawing
 		Utils.matToBitmap(sobelImage, bmpOut);
 	}
-
+	
 	private Mat[] getCirclesMatrices(final Mat originalImage, final Mat circles) {
 		int radius = 0;
 		int left = 0;
