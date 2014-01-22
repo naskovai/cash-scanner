@@ -2,7 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:isScrollContainer="true"
+    >
 
     <org.opencv.houghtransform.CanvasView
         android:id="@+id/canvas_activity_surface_view"

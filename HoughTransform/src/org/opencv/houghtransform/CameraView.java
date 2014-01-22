@@ -56,6 +56,22 @@ public class CameraView extends JavaCameraView implements PictureCallback {
 
     public void takePicture() {
         Log.i(TAG, "Taking picture");
+       
+        Camera.Parameters params = mCamera.getParameters();
+        List<Camera.Size> sizes = params.getSupportedPictureSizes();
+        int maxHeight = 0;
+        int maxWidth = 0;
+        
+        for (Camera.Size size : sizes){
+        	Log.i(TAG, "size.height: " + size.height);
+        	Log.i(TAG, "size.width: " + size.width);
+        	if (size.height > maxHeight && size.width > maxWidth){
+        		maxHeight = size.height;
+        		maxWidth = size.width;
+        	}
+        }
+        params.setPictureSize(maxWidth, maxHeight);
+        mCamera.setParameters(params);
         // Postview and jpeg are sent in the same buffers if the queue is not empty when performing a capture.
         // Clear up buffers to avoid mCamera.takePicture to be stuck because of a memory issue
         mCamera.setPreviewCallback(null);
@@ -66,7 +82,7 @@ public class CameraView extends JavaCameraView implements PictureCallback {
 
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
-        Log.i(TAG, "Saving a bitmap to file");
+        Log.i(TAG, "Saving a bitmap to file. Size: " + data.length);
         // The camera preview was automatically stopped. Start it again.
         //mCamera.startPreview();
         //mCamera.setPreviewCallback(this);

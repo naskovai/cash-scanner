@@ -70,6 +70,10 @@ public class HoughTransform extends Activity implements CvCameraViewListener2, O
         setContentView(R.layout.houghtransform_surface_view);
 
         setOpenCvCameraView((CameraView) findViewById(R.id.houghtransform_activity_java_surface_view));
+        getOpenCvCameraView().setMaxFrameSize(1280, 720);
+        Log.i(TAG, "Height: " + getOpenCvCameraView().getHeight());
+        Log.i(TAG, "Width: " + getOpenCvCameraView().getWidth());
+
         getOpenCvCameraView().setVisibility(SurfaceView.VISIBLE);
         getOpenCvCameraView().setCvCameraViewListener(this);
 
