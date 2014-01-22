@@ -7,9 +7,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
+import java.util.List;
 import java.util.Vector;
 
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfFloat;
+import org.opencv.core.MatOfInt;
+import org.opencv.imgproc.Imgproc;
 
 import android.content.Context;
 
@@ -91,5 +95,49 @@ public class KnowledgeBase {
 			e.printStackTrace();
 		}
 		
+	}
+	
+//////////////////////////////////////////////////////////////////////////////////	
+//  CURRENTLY A MYSTERY. MIGHT BE USEFUL LATER  //////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+//	
+//	private double l2Norm(Mat image){
+//		double norm = 0;
+//	    for (int i = 0; i < image.cols(); i++){
+//	    	for (int j = 0; j < image.rows(); j++){
+//		    	norm += image.get(j, i)[0] * image.get(j, i)[0];
+//		    }
+//	    }
+//	    
+//	    return Math.sqrt(norm);
+//	}
+//	
+//	private void normalizeFilterResponse(Mat filterResponse){
+//		double l2norm = l2Norm(filterResponse);
+//		
+//	    for (int i = 0; i < filterResponse.cols(); i++){
+//	    	for (int j = 0; j < filterResponse.rows(); j++){
+//	    		double normalizedIntensity = filterResponse.get(j, i)[0] * Math.log(1 + l2norm / 0.03) / l2norm;
+//	    		filterResponse.put(j, i, normalizedIntensity);
+//		    }
+//	    }
+//	}
+//////////////////////////////////////////////////////////////////////////////////	
+	
+	private void histogramTest(Mat firstImage, Mat secondImage){
+		List<Mat> l1 = new Vector<Mat>();
+		l1.add(firstImage);
+		
+		List<Mat> l2 = new Vector<Mat>();
+		l2.add(secondImage);
+		
+		MatOfInt channels = new MatOfInt(0);
+        Mat hist1 = new Mat();
+        Mat hist2 = new Mat();
+        MatOfInt histSize = new MatOfInt(256);
+        MatOfFloat ranges = new MatOfFloat(0f, 255f);
+		Imgproc.calcHist(l1, channels, new Mat(), hist1, histSize, ranges);
+		Imgproc.calcHist(l2, channels, new Mat(), hist2, histSize, ranges);
+		System.out.println(Imgproc.compareHist(hist1, hist2, Imgproc.CV_COMP_CHISQR));
 	}
 }
