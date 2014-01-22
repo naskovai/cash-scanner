@@ -1,4 +1,6 @@
-
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 public class MR8FilterBank {
 	private int filtersKernelSize;
@@ -14,6 +16,48 @@ public class MR8FilterBank {
 	public MR8FilterBank(int filtersKernelSize) {
 		this.filtersKernelSize = filtersKernelSize;
 		initializeFilters();
+	}
+	
+	public Mat[] getResponses(Mat input) {
+		Mat[] responses = new Mat[8];
+		
+		responses[0] = input.clone();
+		Imgproc.filter2D(responses[0], responses[0], -1, this.gaussianFilter.getKernel());
+		
+		responses[1] = input.clone();
+		Imgproc.filter2D(responses[1], responses[1], -1, this.logFilter.getKernel());
+		
+		responses[2] = getMaxResponse(input, this.edgeFilters, 0, 6);
+		responses[3] = getMaxResponse(input, this.edgeFilters, 6, 6);
+		responses[4] = getMaxResponse(input, this.edgeFilters, 12, 6);
+		
+		responses[5] = getMaxResponse(input, this.barFilters, 0, 6);
+		responses[6] = getMaxResponse(input, this.barFilters, 6, 6);
+		responses[7] = getMaxResponse(input, this.barFilters, 12, 6);
+		
+		return responses;
+	}
+	
+	private Mat getMaxResponse(Mat input, Filter[] filters, int startFilter, int count) {
+		Mat maxResponse = null;
+		
+		for(int i = startFilter; i < startFilter + count; i++) {
+			Mat currentEdgeResponse = input.clone();
+			Imgproc.filter2D(currentEdgeResponse, currentEdgeResponse, -1, filters[i].getKernel());
+			
+			if (maxResponse == null) {
+				maxResponse = currentEdgeResponse;
+			}
+			else {/*
+				for (int row = 0; row < maxResponse.rows(); row++)
+					for (int col = 0; col < maxResponse.cols(); col++) {
+						maxResponse.put(row, col, 
+								Math.max(maxResponse.get(row, col)[0], currentEdgeResponse.get(row, col)[0]));
+					}*/
+			}
+		}
+
+		return maxResponse; 
 	}
 	
 	private void initializeFilters() {

@@ -30,10 +30,10 @@ public abstract class Filter {
 				double kernelElementValue =
 						getKernelElementValue(Math.abs(i - center.getX()), Math.abs(j - center.getY()));
 				kernel.put(i, j, kernelElementValue);
-			}	
+			}
 		return normalize(kernel, size);
 	}
-	
+
 	private Mat normalize(Mat kernel, int size) {
 		double normalizationValue = 1 / sum(kernel, size); 
 		for (int i = 0; i < size; i++)
