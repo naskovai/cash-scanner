@@ -24,6 +24,9 @@ public class CoinProcessor {
 	public CoinTypes getCoinType(Mat image) {
 		MaxFiltersResponses responses = filterBank.getResponses(image);
 		HashMap<Vector, Integer> textons = kMeansFinder.getTextons(responses);
+		
+		//String res = dump(textons);
+		
 		Histogram histogram = convertToHistogram(textons);
 		histogram.normalize();
 		
@@ -39,6 +42,32 @@ public class CoinProcessor {
 	}
 	
 	public void train(Mat[] image, CoinTypes coinType) {
+	}
+	
+	private String dump(HashMap<Vector, Integer> textons) {
+		String result = "";
+		
+		int index = 0;
+		for(Vector v: textons.keySet()) {
+			String variableName = "vector_" + String.valueOf(index);
+			
+			result += "Vector " + variableName + " = new Vector(8);\n";
+			result += "setVectorValues(" + variableName + ", ";
+			
+			for(int i = 0; i < 7; i++) {
+				result += String.valueOf(v.get(i));
+				result += ",";
+			}
+			result += String.valueOf(v.get(7));
+			result += ");\n";
+			
+			result += "learnedMeans.put(" + variableName + ", " + String.valueOf(textons.get(v)) + ");\n";
+			result += "\n";
+			
+			index++;
+		}
+		
+		return result;
 	}
 	
 	private Histogram convertToHistogram(HashMap<Vector, Integer> textons) {

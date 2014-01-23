@@ -7,7 +7,7 @@ public class Histogram extends Hashtable<Integer, Double> {
 			for (int i = 0; i < this.size(); i++){
 				Double h1 = this.get(i);
 				Double h2 = computedHistogram.get(i);
-				chiSq += (h2 - h1) * (h2 - h1) / h1;
+				chiSq += ((h2 - h1) * (h2 - h1)) / (h1 + h2);
 			}
 			
 			return chiSq;
