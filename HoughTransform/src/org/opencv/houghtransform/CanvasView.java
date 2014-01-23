@@ -49,8 +49,8 @@ public class CanvasView extends LinearLayout {
 
 		Mat mImg = new Mat();
 		setWillNotDraw(false);
-		// myBitmap = BitmapFactory.decodeResource(getResources(),
-		// R.drawable.test7);
+//		 myBitmap = BitmapFactory.decodeResource(getResources(),
+//		 R.drawable.test7);
 
 		myBitmap = BitmapFactory.decodeByteArray(compressedImage, 0,
 				compressedImage.length);
@@ -90,7 +90,7 @@ public class CanvasView extends LinearLayout {
 		if (circles.rows() == 1) {
 			System.out.println("circleImage.cols(): " + circles.cols());
 			for (int i = 0; i < circles.cols(); i++) {
-				Core.circle(sobelImage,
+				Core.circle(mImg,
 						new Point(circles.get(0, i)[0], circles.get(0, i)[1]),
 						(int) circles.get(0, i)[2], new Scalar(255d, 0d, 0d), 2);
 			}
