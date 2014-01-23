@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Set;
 
 
@@ -14,21 +14,21 @@ public class KMeansFinder {
 		return k;
 	}
 	
-	public HashMap<Vector, Integer> getTextons(MaxFiltersResponses filtersResponses) {
-		HashMap<Vector, Integer> frequenceByVector = convertToFrequenceByVector(filtersResponses.getAllVectors());
+	public Hashtable<Vector, Integer> getTextons(MaxFiltersResponses filtersResponses) {
+		Hashtable<Vector, Integer> frequenceByVector = convertToFrequenceByVector(filtersResponses.getAllVectors());
 		return getTextons(frequenceByVector);
 	}
 	
-	private HashMap<Vector, Integer> convertToFrequenceByVector(Vector[] vectors) {
-		HashMap<Vector, Integer> frequenceByVector = new HashMap<>(vectors.length);
+	private Hashtable<Vector, Integer> convertToFrequenceByVector(Vector[] vectors) {
+		Hashtable<Vector, Integer> frequenceByVector = new Hashtable<>(vectors.length);
 		for(int i = 0; i < vectors.length; i++) {
 			frequenceByVector.put(vectors[i], 1);
 		}
 		return frequenceByVector;
 	}
 	
-	public HashMap<Vector, Integer> getTextons(HashMap<Vector, Integer> means) {
-		HashMap<Vector, ArrayList<Vector>> textons = new HashMap<Vector, ArrayList<Vector>>();
+	public Hashtable<Vector, Integer> getTextons(Hashtable<Vector, Integer> means) {
+		Hashtable<Vector, ArrayList<Vector>> textons = new Hashtable<Vector, ArrayList<Vector>>();
 		seed(textons, means.keySet());
 		
 		int iterations = 10;
@@ -40,11 +40,11 @@ public class KMeansFinder {
 		}
 		classify(textons, means.keySet());
 		
-		HashMap<Vector, Integer> frequenceByTexton = convertToFrequenceByTexton(textons);
+		Hashtable<Vector, Integer> frequenceByTexton = convertToFrequenceByTexton(textons);
 		return frequenceByTexton;
 	}
 	
-	private void seed(HashMap<Vector, ArrayList<Vector>> textons, Set<Vector> vectors) {
+	private void seed(Hashtable<Vector, ArrayList<Vector>> textons, Set<Vector> vectors) {
 		int count = 0;
 		for(Vector v: vectors) {
 			if (count == k)
@@ -56,7 +56,7 @@ public class KMeansFinder {
 		}
 	}
 	
-	private void classify(HashMap<Vector, ArrayList<Vector>> textons, Set<Vector> vectors) {
+	private void classify(Hashtable<Vector, ArrayList<Vector>> textons, Set<Vector> vectors) {
 		for(Vector v: vectors) {
 			Vector center = getClusterCenter(textons.keySet(), v);
 			textons.get(center).add(v);
@@ -76,7 +76,7 @@ public class KMeansFinder {
 		return center;
 	}
 	
-	private void optimize(HashMap<Vector, ArrayList<Vector>> textons) {
+	private void optimize(Hashtable<Vector, ArrayList<Vector>> textons) {
 		ArrayList<Vector> newCenters = new ArrayList<Vector>();
 		for(Vector oldCenter: textons.keySet()) {
 			newCenters.add(Vector.getMeanVector(textons.get(oldCenter), oldCenter.size()));
@@ -88,8 +88,8 @@ public class KMeansFinder {
 		}
 	}
 	
-	private HashMap<Vector, Integer> convertToFrequenceByTexton(HashMap<Vector, ArrayList<Vector>> textons) {
-		HashMap<Vector, Integer> frequenceByTexton = new HashMap<Vector, Integer>();
+	private Hashtable<Vector, Integer> convertToFrequenceByTexton(Hashtable<Vector, ArrayList<Vector>> textons) {
+		Hashtable<Vector, Integer> frequenceByTexton = new Hashtable<Vector, Integer>();
 		for(Vector key: textons.keySet()) {
 			frequenceByTexton.put(key, textons.get(key).size());
 		}

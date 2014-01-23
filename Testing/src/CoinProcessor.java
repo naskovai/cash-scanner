@@ -1,4 +1,6 @@
-import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Hashtable;
+
 import org.opencv.core.Mat;
 
 public class CoinProcessor {
@@ -23,7 +25,7 @@ public class CoinProcessor {
 	
 	public CoinTypes getCoinType(Mat image) {
 		MaxFiltersResponses responses = filterBank.getResponses(image);
-		HashMap<Vector, Integer> textons = kMeansFinder.getTextons(responses);
+		Hashtable<Vector, Integer> textons = kMeansFinder.getTextons(responses);
 		
 		//String res = dump(textons);
 		
@@ -34,8 +36,8 @@ public class CoinProcessor {
 		return coinType;
 	}
 	
-	public Histogram getHistogram(HashMap<Vector, Integer> means) {
-		HashMap<Vector, Integer> textons = kMeansFinder.getTextons(means);
+	public Histogram getHistogram(Hashtable<Vector, Integer> means) {
+		Hashtable<Vector, Integer> textons = kMeansFinder.getTextons(means);
 		Histogram histogram = convertToHistogram(textons);
 		histogram.normalize();
 		return histogram;
@@ -44,7 +46,7 @@ public class CoinProcessor {
 	public void train(Mat[] image, CoinTypes coinType) {
 	}
 	
-	private String dump(HashMap<Vector, Integer> textons) {
+	private String dump(Hashtable<Vector, Integer> textons) {
 		String result = "";
 		
 		int index = 0;
@@ -70,7 +72,7 @@ public class CoinProcessor {
 		return result;
 	}
 	
-	private Histogram convertToHistogram(HashMap<Vector, Integer> textons) {
+	private Histogram convertToHistogram(Hashtable<Vector, Integer> textons) {
 		Histogram histogram = new Histogram();
 		
 		int colorId = 0;

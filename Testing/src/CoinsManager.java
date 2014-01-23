@@ -1,9 +1,9 @@
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Hashtable;
 
 
 public class CoinsManager {
-	private double eps = 3;
+	private double eps = 0.1;
 	private ArrayList<Coin> coins;
 	
 	public CoinsManager() {
@@ -18,7 +18,7 @@ public class CoinsManager {
 			if (currentCoinHistogram.size() == 0)
 				continue;
 			
-			double currentDistance = c.getHistogram().distance(histogram);
+			double currentDistance = c.getHistogram().getMinDistance(histogram);
 			if (currentDistance < eps) {
 				if (minDistance > currentDistance) {
 					minDistance = currentDistance;
@@ -42,8 +42,8 @@ public class CoinsManager {
 		coins.add(new Coin(CoinTypes.LevFront, getLearnedMeans(CoinTypes.LevFront)));
 	}
 	
-	private HashMap<Vector, Integer> getLearnedMeans(CoinTypes coinType) {
-		HashMap<Vector, Integer> learnedMeans = new HashMap<Vector, Integer>();
+	private Hashtable<Vector, Integer> getLearnedMeans(CoinTypes coinType) {
+		Hashtable<Vector, Integer> learnedMeans = new Hashtable<Vector, Integer>();
 		
 		if (coinType == CoinTypes.OneFront) {
 		}
@@ -76,7 +76,7 @@ public class CoinsManager {
 	
 	//////////////// HARDCODED LEARNING MODELS ///////////////////
 	
-	private void train20_1(HashMap<Vector, Integer> learnedMeans) {
+	private void train20_1(Hashtable<Vector, Integer> learnedMeans) {
 		Vector vector_0 = new Vector(8);
 		setVectorValues(vector_0, 134.4076593600403,211.56487780297303,145.56991685563113,141.81582262534644,133.75535399344923,179.88737717309147,218.79994960947343,219.20786092214664);
 		learnedMeans.put(vector_0, 3968);
@@ -98,7 +98,7 @@ public class CoinsManager {
 		learnedMeans.put(vector_4, 1622);
 	}
 	
-	private void train20_2(HashMap<Vector, Integer> learnedMeans) {
+	private void train20_2(Hashtable<Vector, Integer> learnedMeans) {
 		Vector vector_0 = new Vector(8);
 		setVectorValues(vector_0, 114.165062560154,217.16145332050047,124.20548604427334,120.71679499518768,113.361645813282,152.4143407122233,230.93527430221366,234.61693936477383);
 		learnedMeans.put(vector_0, 4160);
@@ -120,7 +120,7 @@ public class CoinsManager {
 		learnedMeans.put(vector_4, 3909);
 	}
 
-	private void train20_3(HashMap<Vector, Integer> learnedMeans) {
+	private void train20_3(Hashtable<Vector, Integer> learnedMeans) {
 		Vector vector_0 = new Vector(8);
 		setVectorValues(vector_0, 194.1334944936879,230.6999731399409,200.0163846360462,198.33763094278808,194.41015310233684,219.77437550362612,235.87724952994895,238.39242546333602);
 		learnedMeans.put(vector_0, 3708);
@@ -142,7 +142,7 @@ public class CoinsManager {
 		learnedMeans.put(vector_4, 2058);
 	}
 	
-	private void train20_4(HashMap<Vector, Integer> learnedMeans) {
+	private void train20_4(Hashtable<Vector, Integer> learnedMeans) {
 		Vector vector_0 = new Vector(8);
 		setVectorValues(vector_0, 203.4578967792006,232.79937912301125,213.32945285215368,210.63057819169578,203.51920838183935,233.60651920838183,242.96585176561894,243.6988746604579);
 		learnedMeans.put(vector_0, 2618);
@@ -164,7 +164,7 @@ public class CoinsManager {
 		learnedMeans.put(vector_4, 2945);
 	}
 	
-	private void train20_5(HashMap<Vector, Integer> learnedMeans) {
+	private void train20_5(Hashtable<Vector, Integer> learnedMeans) {
 		Vector vector_0 = new Vector(8);
 		setVectorValues(vector_0, 81.82354609929078,44.33531914893617,88.96368794326241,89.01191489361702,88.6158865248227,97.32652482269503,255.0,212.81843971631207);
 		learnedMeans.put(vector_0, 3528);

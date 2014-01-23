@@ -1,12 +1,12 @@
-import java.util.HashMap;
+import java.util.Hashtable;
 
 
 public class Coin {
 	private CoinTypes type;
-	private HashMap<Vector, Integer> means;
+	private Hashtable<Vector, Integer> means;
 	private Histogram textonsHistogram;
 	
-	public Coin(CoinTypes type, HashMap<Vector, Integer> means) {
+	public Coin(CoinTypes type, Hashtable<Vector, Integer> means) {
 		this.type = type;
 		this.means = means;
 	}
