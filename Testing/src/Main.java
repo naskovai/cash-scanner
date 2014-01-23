@@ -12,7 +12,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		test("C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\HoughTransform\\res\\drawable\\drawable\\5.jpg");
+		test("C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\HoughTransform\\res\\drawable\\drawable\\10_2.jpg");
 	}
 	
 	private static void test(String image) {
