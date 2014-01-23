@@ -27,7 +27,7 @@ public class CoinProcessor {
 		MaxFiltersResponses responses = filterBank.getResponses(image);
 		Hashtable<Vector, Integer> textons = kMeansFinder.getTextons(responses);
 		
-		//String res = dump(textons);
+		String res = dump(textons);
 		
 		Histogram histogram = convertToHistogram(textons);
 		histogram.normalize();

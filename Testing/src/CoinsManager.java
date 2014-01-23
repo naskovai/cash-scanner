@@ -3,7 +3,7 @@ import java.util.Hashtable;
 
 
 public class CoinsManager {
-	private double eps = 0.1;
+	private double eps = 1;
 	private ArrayList<Coin> coins;
 	
 	public CoinsManager() {
@@ -49,9 +49,11 @@ public class CoinsManager {
 		}
 		else if (coinType == CoinTypes.TwoFront) {
 		}
-		else if (coinType == CoinTypes.FiveFront) {		
+		else if (coinType == CoinTypes.FiveFront) {
+			train5_1(learnedMeans);
 		}
 		else if (coinType == CoinTypes.TenFront) {
+			train10_1(learnedMeans);
 		}
 		else if (coinType == CoinTypes.TwentyFront) {
 			train20_1(learnedMeans);
@@ -63,6 +65,7 @@ public class CoinsManager {
 		else if (coinType == CoinTypes.FiftyFront) {
 		}
 		else if (coinType == CoinTypes.LevFront) {
+			trainLev_1(learnedMeans);
 		}
 		
 		return learnedMeans;
@@ -75,6 +78,50 @@ public class CoinsManager {
 	}
 	
 	//////////////// HARDCODED LEARNING MODELS ///////////////////
+	
+	private void train5_1(Hashtable<Vector, Integer> learnedMeans) {
+		Vector vector_0 = new Vector(8);
+		setVectorValues(vector_0, 127.97684943429068,207.54046997389034,139.77127937336815,134.72741514360314,127.40557006092254,186.1467362924282,232.22384682332464,238.2485639686684);
+		learnedMeans.put(vector_0, 5585);
+
+		Vector vector_1 = new Vector(8);
+		setVectorValues(vector_1, 120.37433751743376,123.55146443514644,125.56206415620642,124.036820083682,122.63933054393306,157.23849372384936,150.71910739191074,155.284239888424);
+		learnedMeans.put(vector_1, 3572);
+
+		Vector vector_2 = new Vector(8);
+		setVectorValues(vector_2, 81.54683929931454,33.13861386138614,90.70792079207921,90.26618431073877,91.26694592536177,123.7018278750952,252.36443259710586,222.67250571210968);
+		learnedMeans.put(vector_2, 2670);
+
+		Vector vector_3 = new Vector(8);
+		setVectorValues(vector_3, 15.803779069767442,6.71875,19.206031976744185,21.392078488372093,22.679505813953487,17.749273255813954,50.92005813953488,40.682412790697676);
+		learnedMeans.put(vector_3, 2783);
+
+		Vector vector_4 = new Vector(8);
+		setVectorValues(vector_4, 70.93675417661098,18.821002386634845,81.13603818615752,83.67601431980907,84.57816229116945,98.54713603818615,94.55966587112172,164.11575178997614);
+		learnedMeans.put(vector_4, 1774);
+	}
+	
+	private void train10_1(Hashtable<Vector, Integer> learnedMeans) {
+		Vector vector_0 = new Vector(8);
+		setVectorValues(vector_0, 23.325251330573625,7.033707865168539,32.1632170313424,32.88350088704908,34.55824955647546,44.21289178001183,255.0,189.18568894145477);
+		learnedMeans.put(vector_0, 1691);
+
+		Vector vector_1 = new Vector(8);
+		setVectorValues(vector_1, 174.06124202258223,236.8631566028473,187.41310751104567,181.69612174766814,174.10493372606774,224.69648993618065,238.03092783505156,237.286205203731);
+		learnedMeans.put(vector_1, 8148);
+
+		Vector vector_2 = new Vector(8);
+		setVectorValues(vector_2, 11.829177057356608,2.548004987531172,17.21571072319202,20.569825436408976,22.74064837905237,15.708852867830425,20.953865336658353,53.28491271820449);
+		learnedMeans.put(vector_2, 1605);
+
+		Vector vector_3 = new Vector(8);
+		setVectorValues(vector_3, 45.722933643771825,11.630966239813738,61.18626309662398,66.83701979045402,68.46682188591386,77.02677532013969,81.0768335273574,194.78696158323632);
+		learnedMeans.put(vector_3, 858);
+
+		Vector vector_4 = new Vector(8);
+		setVectorValues(vector_4, 165.3968642822146,70.71974522292993,174.2300342969133,174.09750122488975,175.67613914747673,214.0952964233219,225.7251347378736,226.781234688878);
+		learnedMeans.put(vector_4, 4082);
+	}
 	
 	private void train20_1(Hashtable<Vector, Integer> learnedMeans) {
 		Vector vector_0 = new Vector(8);
@@ -184,5 +231,27 @@ public class CoinsManager {
 		Vector vector_4 = new Vector(8);
 		setVectorValues(vector_4, 108.2824427480916,226.97982551799345,120.32388222464559,116.13522355507088,106.96973827699018,148.11041439476554,232.62295528898582,232.2429116684842);
 		learnedMeans.put(vector_4, 3665);
+	}
+	
+	private void trainLev_1(Hashtable<Vector, Integer> learnedMeans) {
+		Vector vector_0 = new Vector(8);
+		setVectorValues(vector_0, 5.914834314029111,0.33415918240941467,10.039950449055436,12.536698668318365,13.964385258593992,9.866212449674823,16.876432331991328,36.96779188603283);
+		learnedMeans.put(vector_0, 3234);
+
+		Vector vector_1 = new Vector(8);
+		setVectorValues(vector_1, 113.53611393692778,229.80137334689726,128.86851475076298,122.53153611393692,112.32299084435402,186.82680569684638,220.0384028484232,234.06027466937945);
+		learnedMeans.put(vector_1, 3925);
+
+		Vector vector_2 = new Vector(8);
+		setVectorValues(vector_2, 89.42380609551236,70.81593472522198,97.30117590592752,95.54955603551716,95.0875929925606,130.77081833453323,210.91408687305017,250.88192944564435);
+		learnedMeans.put(vector_2, 4156);
+
+		Vector vector_3 = new Vector(8);
+		setVectorValues(vector_3, 19.23673469387755,2.136734693877551,27.53265306122449,29.255102040816325,31.791836734693877,36.36938775510204,255.0,102.56326530612245);
+		learnedMeans.put(vector_3, 503);
+
+		Vector vector_4 = new Vector(8);
+		setVectorValues(vector_4, 92.85567236092861,63.50963644327639,97.36114761279019,97.38611476127902,97.60205869469996,125.27179150240912,141.02190100744633,112.26675427069645);
+		learnedMeans.put(vector_4, 4566);
 	}
 }
