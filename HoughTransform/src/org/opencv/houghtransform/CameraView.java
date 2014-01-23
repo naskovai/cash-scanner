@@ -59,15 +59,16 @@ public class CameraView extends JavaCameraView implements PictureCallback {
        
         Camera.Parameters params = mCamera.getParameters();
         List<Camera.Size> sizes = params.getSupportedPictureSizes();
-        int maxHeight = 0;
-        int maxWidth = 0;
+        int maxHeight = 10000;
+        int maxWidth = 10000;
         
         for (Camera.Size size : sizes){
         	Log.i(TAG, "size.height: " + size.height);
         	Log.i(TAG, "size.width: " + size.width);
-        	if (size.height > maxHeight && size.width > maxWidth){
+        	if (size.height < 720 && size.width < 1280 && size.height > 400 && size.width > 400){
         		maxHeight = size.height;
         		maxWidth = size.width;
+        		break;
         	}
         }
         params.setPictureSize(maxWidth, maxHeight);

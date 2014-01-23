@@ -15,12 +15,16 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.houghtransform.R;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.LinearLayout.LayoutParams;
 
 public class CanvasView extends LinearLayout {
 
@@ -51,10 +55,14 @@ public class CanvasView extends LinearLayout {
 		setWillNotDraw(false);
 //		 myBitmap = BitmapFactory.decodeResource(getResources(),
 //		 R.drawable.test7);
-
+//
+//		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+//		Display display = wm.getDefaultDisplay();
+//		android.graphics.Point size = new android.graphics.Point();
+//		display.getSize(size);
 		myBitmap = BitmapFactory.decodeByteArray(compressedImage, 0,
 				compressedImage.length);
-		myBitmap = Bitmap.createScaledBitmap(myBitmap, 1280, 720, false);
+		//myBitmap = Bitmap.createScaledBitmap(myBitmap, 533, 300, false);
 		bmpOut = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(),
 				Bitmap.Config.ARGB_8888);
 
@@ -99,7 +107,7 @@ public class CanvasView extends LinearLayout {
 		Mat[] coins = getCirclesMatrices(mGray, circles);
 		getCoinValues(coins);
 		// Convert back to a bitmap suitable for drawing
-		Utils.matToBitmap(sobelImage, bmpOut);
+		Utils.matToBitmap(mImg, bmpOut);
 	}
 
 	@SuppressLint("NewApi")
@@ -113,15 +121,11 @@ public class CanvasView extends LinearLayout {
 		coinMap.put("20", 0);
 		coinMap.put("50", 0);
 		coinMap.put("100", 0);
-		coinMap.put("back", 0);
 
 		for (int i = 0; i < coins.length; i++) {
-			switch (getCoinType(coins[i])) {
+			switch (CoinProcessor.getInstance().getCoinType(coins[i])) {
 			case OneFront:
 				coinMap.put("1", coinMap.get("1") + 1);
-				break;
-			case Back:
-				coinMap.put("back", coinMap.get("back") + 1);
 				break;
 			case FiftyFront:
 				coinMap.put("50", coinMap.get("50") + 1);
@@ -155,7 +159,6 @@ public class CanvasView extends LinearLayout {
 		coinList[4] = "20 Stotinki: " + coinMap.put("20", 0);
 		coinList[5] = "50 Stotinki: " + coinMap.put("50", 0);
 		coinList[6] = "1 Lev: " + coinMap.put("100", 0);
-		coinList[7] = "Tura: " + coinMap.put("back", 0);
 
 		for (int i = 0; i < coinList.length; i++) {
 			TextView coinString = new TextView(context);
@@ -167,14 +170,14 @@ public class CanvasView extends LinearLayout {
 		}
 	}
 
-	private enum CoinTypes {
-		None, OneFront, TwoFront, FiveFront, TenFront, TwentyFront, FiftyFront, LevFront, Back
-	}
-
-	public CoinTypes getCoinType(Mat image) {
-		Random random = new Random();
-		return CoinTypes.values()[random.nextInt(CoinTypes.values().length)];
-	}
+//	private enum CoinTypes {
+//		None, OneFront, TwoFront, FiveFront, TenFront, TwentyFront, FiftyFront, LevFront
+//	}
+//
+//	public CoinTypes getCoinType(Mat image) {
+//		Random random = new Random();
+//		return CoinTypes.values()[random.nextInt(CoinTypes.values().length)];
+//	}
 
 	private Mat[] getCirclesMatrices(final Mat originalImage, final Mat circles) {
 		int radius = 0;
