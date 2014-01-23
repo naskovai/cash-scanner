@@ -38,6 +38,7 @@ public class KMeansFinder {
 			classify(textons, means.keySet());
 			optimize(textons);
 		}
+		classify(textons, means.keySet());
 		
 		HashMap<Vector, Integer> frequenceByTexton = convertToFrequenceByTexton(textons);
 		return frequenceByTexton;
