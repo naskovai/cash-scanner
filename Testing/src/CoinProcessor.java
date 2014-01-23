@@ -42,11 +42,24 @@ public class CoinProcessor {
 	public CoinTypes getCoinType(Mat image) {
 		MaxFiltersResponses responses = filterBank.getResponses(image);
 		HashMap<Vector, Integer> textons = kMeansFinder.getTextons(responses);
+		HashMap<Integer, Double> histogram = convertToHistogram(textons);
 		
 		return CoinTypes.None;
 	}
 	
 	public void train(Mat[] image, CoinTypes coinType) {
 		
+	}
+	
+	private HashMap<Integer, Double> convertToHistogram(HashMap<Vector, Integer> textons) {
+		HashMap<Integer, Double> histogram = new HashMap<Integer, Double>();
+		
+		int colorId = 0;
+		for(Vector v: textons.keySet()) {
+			histogram.put(colorId, (double) textons.get(v));
+			colorId++;
+		}
+
+		return histogram;
 	}
 }
