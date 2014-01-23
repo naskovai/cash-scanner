@@ -1,5 +1,6 @@
 package org.opencv.houghtransform;
 
+
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.LoaderCallbackInterface;
@@ -103,16 +104,17 @@ public class HoughTransform extends Activity implements CvCameraViewListener2, O
 	@Override
 	public void onPictureTaken(final byte[] compressedImage) {
 		Button reset = new Button(this);
+
 		reset.setText("Try again");
 		reset.setOnClickListener(new ResetClickListener(this));
 		
 		LinearLayout ll = (LinearLayout) new CanvasView(this, compressedImage);
 		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		setContentView(ll);
-		
+
 		ll.addView(reset, lp);
 	}
-
+	 
 	public CameraView getOpenCvCameraView() {
 		return mOpenCvCameraView;
 	}
