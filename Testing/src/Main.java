@@ -12,13 +12,13 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		test("C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\HoughTransform\\res\\drawable\\hope.png");
+		test("C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\HoughTransform\\res\\drawable\\drawable\\test9.jpg");
 	}
 	
 	private static void test(String image) {
 		Mat img = Highgui.imread(image, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 		
-		CoinProcessor p = new CoinProcessor();
+		CoinProcessor p = CoinProcessor.getInstance();
 		p.getCoinType(img);
 		
 		//Imgproc.filter2D(img, img, -1, new GaussianFilter(99,10).getKernel());

@@ -1,52 +1,55 @@
 import java.util.HashMap;
-import java.util.Hashtable;
-
 import org.opencv.core.Mat;
 
-
 public class CoinProcessor {
+	private static CoinProcessor instance = null;
+
+	public static CoinProcessor getInstance() {
+	   if(instance == null) {
+    	  instance = new CoinProcessor();
+      	}
+      	return instance;
+   	}
+	
 	private MR8FilterBank filterBank;
 	private KMeansFinder kMeansFinder;
+	private CoinsManager coinsManager;
 	
-	public class Histogram extends Hashtable<Integer, Double> {
-		public Double compare(final Histogram computedHistogram){
-			Double chiSq = 0d;
-			
-			for (int i = 0; i < this.size(); i++){
-				Double h1 = this.get(i);
-				Double h2 = computedHistogram.get(i);
-				chiSq += (h2 - h1) * (h2 - h1) / h1;
-			}
-			
-			return chiSq;
-		}
-		
-		public void normalize(){
-			Double area = 0d;
-			
-			for (int i = 0; i < this.size(); i++){
-				area += this.get(i);
-			}
-			
-			for (int i = 0; i < this.size(); i++){
-				this.put(i, this.get(i) / area);
-			}
-		}
-	}
-	
-	public CoinProcessor() {
+	private CoinProcessor() {
 		filterBank = new MR8FilterBank(17);
 		kMeansFinder = new KMeansFinder(5);
+		coinsManager = new CoinsManager();
 	}
 	
 	public CoinTypes getCoinType(Mat image) {
 		MaxFiltersResponses responses = filterBank.getResponses(image);
 		HashMap<Vector, Integer> textons = kMeansFinder.getTextons(responses);
+		Histogram histogram = convertToHistogram(textons);
+		histogram.normalize();
 		
-		return CoinTypes.None;
+		CoinTypes coinType = coinsManager.getCoinType(histogram);
+		return coinType;
+	}
+	
+	public Histogram getHistogram(HashMap<Vector, Integer> means) {
+		HashMap<Vector, Integer> textons = kMeansFinder.getTextons(means);
+		Histogram histogram = convertToHistogram(textons);
+		histogram.normalize();
+		return histogram;
 	}
 	
 	public void train(Mat[] image, CoinTypes coinType) {
+	}
+	
+	private Histogram convertToHistogram(HashMap<Vector, Integer> textons) {
+		Histogram histogram = new Histogram();
 		
+		int colorId = 0;
+		for(Vector v: textons.keySet()) {
+			histogram.put(colorId, (double) textons.get(v));
+			colorId++;
+		}
+
+		return histogram;
 	}
 }
