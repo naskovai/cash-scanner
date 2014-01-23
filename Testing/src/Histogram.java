@@ -12,7 +12,7 @@ public class Histogram extends Hashtable<Integer, Double> {
 			
 		return chiSq;
 	}
-	
+
 	private double getChiSquareElement(int i, final Histogram computedHistogram) {
 		Double h1 = this.get(i);
 		Double h2 = computedHistogram.get(i);
