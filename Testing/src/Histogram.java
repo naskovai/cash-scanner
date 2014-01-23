@@ -3,7 +3,7 @@ import java.util.Hashtable;
 public class Histogram extends Hashtable<Integer, Double> {
 	private double minDistance;
 	
-	public Double distance(final Histogram computedHistogram){
+	private Double distance(final Histogram computedHistogram){
 		Double chiSq = 0d;
 			
 		for (int i = 0; i < this.size(); i++){

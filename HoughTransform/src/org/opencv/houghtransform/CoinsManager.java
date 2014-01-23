@@ -4,7 +4,7 @@ import java.util.Hashtable;
 
 
 public class CoinsManager {
-	private double eps = 3;
+	private double eps = 0.1;
 	private ArrayList<Coin> coins;
 	
 	public CoinsManager() {
@@ -19,7 +19,7 @@ public class CoinsManager {
 			if (currentCoinHistogram.size() == 0)
 				continue;
 			
-			double currentDistance = c.getHistogram().distance(histogram);
+			double currentDistance = c.getHistogram().getMinDistance(histogram);
 			if (currentDistance < eps) {
 				if (minDistance > currentDistance) {
 					minDistance = currentDistance;
