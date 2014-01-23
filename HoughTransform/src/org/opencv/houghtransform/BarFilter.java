@@ -1,5 +1,6 @@
 package org.opencv.houghtransform;
 
+
 public class BarFilter extends Filter {
 	private double sigmaX;
 	private double sigmaY;

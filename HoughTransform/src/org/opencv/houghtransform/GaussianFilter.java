@@ -1,5 +1,6 @@
 package org.opencv.houghtransform;
 
+
 public class GaussianFilter extends Filter {
 	private double sigma;
 
