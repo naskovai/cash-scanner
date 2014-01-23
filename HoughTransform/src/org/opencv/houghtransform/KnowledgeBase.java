@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
@@ -23,20 +24,45 @@ public class KnowledgeBase {
 		//TODO: ???		
 	}
 	
+	public class Histogram extends Hashtable<Integer, Double> {
+		public Double compare(final Histogram computedHistogram){
+			Double chiSq = 0d;
+			
+			for (int i = 0; i < this.size(); i++){
+				Double h1 = this.get(i);
+				Double h2 = computedHistogram.get(i);
+				chiSq += (h2 - h1) * (h2 - h1) / h1;
+			}
+			
+			return chiSq;
+		}
+		
+		public void normalize(){
+			Double area = 0d;
+			
+			for (int i = 0; i < this.size(); i++){
+				area += this.get(i);
+			}
+			
+			for (int i = 0; i < this.size(); i++){
+				this.put(i, this.get(i) / area);
+			}
+		}
+	}
 	public class CoinType {
 		private int i_type;
-		private Mat i_histogram;
+		private Histogram i_histogram;
 		private Vector<Texton> i_textonList;
 		
 		public CoinType(int type){
 			i_type = type;
 		}
 
-		public Mat getHistogram() {
+		public Histogram getHistogram() {
 			return i_histogram;
 		}
 
-		public void setHistogram(Mat i_histogram) {
+		public void setHistogram(Histogram i_histogram) {
 			this.i_histogram = i_histogram;
 		}
 
