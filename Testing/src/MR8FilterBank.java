@@ -1,5 +1,6 @@
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class MR8FilterBank {
@@ -18,24 +19,56 @@ public class MR8FilterBank {
 		initializeFilters();
 	}
 	
-	public Mat[] getResponses(Mat input) {
+	public MaxFiltersResponses getResponses(Mat input) {
+		Mat image = preProcess(input);
 		Mat[] responses = new Mat[8];
 		
-		responses[0] = input.clone();
+		responses[0] = image.clone();
 		Imgproc.filter2D(responses[0], responses[0], -1, this.gaussianFilter.getKernel());
 		
-		responses[1] = input.clone();
+		responses[1] = image.clone();
 		Imgproc.filter2D(responses[1], responses[1], -1, this.logFilter.getKernel());
 		
-		responses[2] = getMaxResponse(input, this.edgeFilters, 0, 6);
-		responses[3] = getMaxResponse(input, this.edgeFilters, 6, 6);
-		responses[4] = getMaxResponse(input, this.edgeFilters, 12, 6);
+		responses[2] = getMaxResponse(image, this.edgeFilters, 0, 6);
+		responses[3] = getMaxResponse(image, this.edgeFilters, 6, 6);
+		responses[4] = getMaxResponse(image, this.edgeFilters, 12, 6);
 		
-		responses[5] = getMaxResponse(input, this.barFilters, 0, 6);
-		responses[6] = getMaxResponse(input, this.barFilters, 6, 6);
-		responses[7] = getMaxResponse(input, this.barFilters, 12, 6);
+		responses[5] = getMaxResponse(image, this.barFilters, 0, 6);
+		responses[6] = getMaxResponse(image, this.barFilters, 6, 6);
+		responses[7] = getMaxResponse(image, this.barFilters, 12, 6);
 		
-		return responses;
+		MaxFiltersResponses maxFiltersResponses = new MaxFiltersResponses(image.cols(), responses);
+		return maxFiltersResponses;
+	}
+	
+	private Mat preProcess(Mat input) {
+		Mat image = input.clone();
+		Imgproc.resize(image, image, new Size(128, 128));
+		normalizeIntensity(image);
+		return image;
+	}
+	
+	private void normalizeIntensity(Mat image) {
+		int maxInt = 0;
+		int minInt = 255;
+ 
+		for (int i = 0; i < image.cols(); i++) {
+			for(int j = 0; j < image.rows(); j++) {
+				if (image.get(j, i)[0] > maxInt) {
+					maxInt = (int) image.get(j, i)[0];
+				}
+				if (image.get(j, i)[0] < minInt) {
+					minInt = (int) image.get(j, i)[0];
+				}
+			}
+		}
+  
+		for (int i = 0; i < image.cols(); i++) {
+			for(int j = 0; j < image.rows(); j++) {
+				double normalizedValue = (image.get(j, i)[0] - minInt) * 255 / (maxInt - minInt);
+				image.put(j, i, normalizedValue);
+			}
+		}
 	}
 	
 	private Mat getMaxResponse(Mat input, Filter[] filters, int startFilter, int count) {
@@ -48,12 +81,12 @@ public class MR8FilterBank {
 			if (maxResponse == null) {
 				maxResponse = currentEdgeResponse;
 			}
-			else {/*
+			else {
 				for (int row = 0; row < maxResponse.rows(); row++)
 					for (int col = 0; col < maxResponse.cols(); col++) {
 						maxResponse.put(row, col, 
-								Math.max(maxResponse.get(row, col)[0], currentEdgeResponse.get(row, col)[0]));
-					}*/
+							Math.max(maxResponse.get(row, col)[0], currentEdgeResponse.get(row, col)[0]));
+					}
 			}
 		}
 
