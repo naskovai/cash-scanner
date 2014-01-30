@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -53,16 +54,25 @@ public class CanvasView extends LinearLayout {
 
 		Mat mImg = new Mat();
 		setWillNotDraw(false);
-//		 myBitmap = BitmapFactory.decodeResource(getResources(),
-//		 R.drawable.test7);
-//
-//		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-//		Display display = wm.getDefaultDisplay();
-//		android.graphics.Point size = new android.graphics.Point();
-//		display.getSize(size);
-		myBitmap = BitmapFactory.decodeByteArray(compressedImage, 0,
-				compressedImage.length);
-		//myBitmap = Bitmap.createScaledBitmap(myBitmap, 533, 300, false);
+		
+		//Load the image
+		myBitmap = BitmapFactory.decodeResource(getResources(),
+				R.drawable.test12);
+		// myBitmap = BitmapFactory.decodeByteArray(compressedImage, 0,
+		// compressedImage.length);
+		
+		//Scale the image
+		DisplayMetrics metrics = context.getBaseContext().getResources()
+				.getDisplayMetrics();
+		int screenWidth = metrics.widthPixels;
+		int screenHeight = metrics.heightPixels;
+		double ratio = Math.min(screenWidth / (double) myBitmap.getWidth(), screenHeight
+				/ (double) myBitmap.getHeight());
+		myBitmap = Bitmap.createScaledBitmap(myBitmap,
+				(int) (myBitmap.getWidth() * ratio),
+				(int) (myBitmap.getHeight() * ratio), false);
+
+		//Create output image
 		bmpOut = Bitmap.createBitmap(myBitmap.getWidth(), myBitmap.getHeight(),
 				Bitmap.Config.ARGB_8888);
 
@@ -98,7 +108,7 @@ public class CanvasView extends LinearLayout {
 		if (circles.rows() == 1) {
 			System.out.println("circleImage.cols(): " + circles.cols());
 			for (int i = 0; i < circles.cols(); i++) {
-				Core.circle(mImg,
+				Core.circle(sobelImage,
 						new Point(circles.get(0, i)[0], circles.get(0, i)[1]),
 						(int) circles.get(0, i)[2], new Scalar(255d, 0d, 0d), 2);
 			}
@@ -106,8 +116,9 @@ public class CanvasView extends LinearLayout {
 
 		Mat[] coins = getCirclesMatrices(mGray, circles);
 		getCoinValues(coins);
+		
 		// Convert back to a bitmap suitable for drawing
-		Utils.matToBitmap(mImg, bmpOut);
+		Utils.matToBitmap(sobelImage, bmpOut);
 	}
 
 	@SuppressLint("NewApi")
@@ -170,14 +181,15 @@ public class CanvasView extends LinearLayout {
 		}
 	}
 
-//	private enum CoinTypes {
-//		None, OneFront, TwoFront, FiveFront, TenFront, TwentyFront, FiftyFront, LevFront
-//	}
-//
-//	public CoinTypes getCoinType(Mat image) {
-//		Random random = new Random();
-//		return CoinTypes.values()[random.nextInt(CoinTypes.values().length)];
-//	}
+	// private enum CoinTypes {
+	// None, OneFront, TwoFront, FiveFront, TenFront, TwentyFront, FiftyFront,
+	// LevFront
+	// }
+	//
+	// public CoinTypes getCoinType(Mat image) {
+	// Random random = new Random();
+	// return CoinTypes.values()[random.nextInt(CoinTypes.values().length)];
+	// }
 
 	private Mat[] getCirclesMatrices(final Mat originalImage, final Mat circles) {
 		int radius = 0;
