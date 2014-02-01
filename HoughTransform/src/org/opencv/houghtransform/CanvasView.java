@@ -57,7 +57,7 @@ public class CanvasView extends LinearLayout {
 		
 		//Load the image
 		myBitmap = BitmapFactory.decodeResource(getResources(),
-				R.drawable.test12);
+				R.drawable.test15);
 		// myBitmap = BitmapFactory.decodeByteArray(compressedImage, 0,
 		// compressedImage.length);
 		
@@ -92,8 +92,8 @@ public class CanvasView extends LinearLayout {
 		Mat abs_grad_y = new Mat(mGray.rows(), mGray.cols(), CvType.CV_8UC1);
 		Mat sobelImage = new Mat(mGray.rows(), mGray.cols(), CvType.CV_8UC1);
 
-		Imgproc.Sobel(mGray, grad_x, -1, 1, 0, 3, 1, 0, Imgproc.BORDER_DEFAULT);
-		Imgproc.Sobel(mGray, grad_y, -1, 0, 1, 3, 1, 0, Imgproc.BORDER_DEFAULT);
+		Imgproc.Sobel(mGray, grad_x, CvType.CV_16S, 1, 0, 3, 1, 0, Imgproc.BORDER_DEFAULT);
+		Imgproc.Sobel(mGray, grad_y, CvType.CV_16S, 0, 1, 3, 1, 0, Imgproc.BORDER_DEFAULT);
 
 		Core.convertScaleAbs(grad_x, abs_grad_x);
 		Core.convertScaleAbs(grad_y, abs_grad_y);
@@ -102,7 +102,7 @@ public class CanvasView extends LinearLayout {
 		// Obtain an array with circles using Hough Transform algorithm
 		Mat circles = new Mat();
 		Imgproc.HoughCircles(sobelImage, circles, Imgproc.CV_HOUGH_GRADIENT,
-				1d, (double) mGray.height() / 5, 175d, 20d, 50,
+				1d, (double) mGray.height() / 10, 175d, 20d, 30,
 				mGray.height() / 3);
 
 		if (circles.rows() == 1) {
@@ -114,8 +114,8 @@ public class CanvasView extends LinearLayout {
 			}
 		}
 
-		Mat[] coins = getCirclesMatrices(mGray, circles);
-		getCoinValues(coins);
+//		Mat[] coins = getCirclesMatrices(mGray, circles);
+//		getCoinValues(coins);
 		
 		// Convert back to a bitmap suitable for drawing
 		Utils.matToBitmap(sobelImage, bmpOut);
