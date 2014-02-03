@@ -62,8 +62,10 @@ public class ImageProcessor extends IntentService {
 		ResultReceiver resultReceiver = workIntent
 				.getParcelableExtra("resultReceiver");
 		Bitmap workingBitmap = null;
+		Mat colorImage = new Mat();
 		Mat workingImage = new Mat();
 		Mat sobelImage = new Mat();
+
 		// Load the image
 		// workingBitmap = BitmapFactory.decodeResource(getResources(),
 		// R.drawable.test7);
@@ -74,10 +76,10 @@ public class ImageProcessor extends IntentService {
 		workingBitmap = scaleBitmap(workingBitmap, screenHeight, screenWidth);
 
 		// Convert to pixel matrix
-		Utils.bitmapToMat(workingBitmap, workingImage);
+		Utils.bitmapToMat(workingBitmap, colorImage);
 
 		// Convert to gray scale
-		Imgproc.cvtColor(workingImage, workingImage, Imgproc.COLOR_BGRA2GRAY);
+		Imgproc.cvtColor(colorImage, workingImage, Imgproc.COLOR_BGRA2GRAY);
 
 		// Add Gaussian blur to reduce noise
 		Imgproc.GaussianBlur(workingImage, workingImage, new Size(7, 7), 0, 0);
@@ -95,13 +97,13 @@ public class ImageProcessor extends IntentService {
 
 		// Draw circles with specific color according to the value of the coin.
 		// No circle if not coin.
-		drawCircles(workingImage, coinValues, houghCircles);
+		drawCircles(colorImage, coinValues, houghCircles);
 
 		// Map coin values to labels (will use them in GUI)
 		Hashtable<String, Integer> coinMap = mapCoinValues(coinValues);
 
 		// Convert back to a bitmap suitable for drawing
-		Utils.matToBitmap(workingImage, workingBitmap);
+		Utils.matToBitmap(colorImage, workingBitmap);
 
 		// Send the processed image to activity
 		Bundle b = new Bundle();
