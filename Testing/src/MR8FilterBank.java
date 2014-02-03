@@ -22,10 +22,10 @@ public class MR8FilterBank {
 	public MaxFiltersResponses getResponses(Mat input) {
 		Mat image = preProcess(input);
 		Mat[] responses = new Mat[8];
-		
+	
 		responses[0] = image.clone();
 		Imgproc.filter2D(responses[0], responses[0], -1, this.gaussianFilter.getKernel());
-		
+	
 		responses[1] = image.clone();
 		Imgproc.filter2D(responses[1], responses[1], -1, this.logFilter.getKernel());
 		
@@ -74,21 +74,37 @@ public class MR8FilterBank {
 	private Mat getMaxResponse(Mat input, Filter[] filters, int startFilter, int count) {
 		Mat maxResponse = null;
 		
+		double L[][] = new double[input.rows()][input.cols()];
+
 		for(int i = startFilter; i < startFilter + count; i++) {
-			Mat currentEdgeResponse = input.clone();
-			Imgproc.filter2D(currentEdgeResponse, currentEdgeResponse, -1, filters[i].getKernel());
+			Mat currentResponse = input.clone();
+			Imgproc.filter2D(currentResponse, currentResponse, -1, filters[i].getKernel());
 			
 			if (maxResponse == null) {
-				maxResponse = currentEdgeResponse;
+				maxResponse = currentResponse;
 			}
 			else {
 				for (int row = 0; row < maxResponse.rows(); row++)
 					for (int col = 0; col < maxResponse.cols(); col++) {
 						maxResponse.put(row, col, 
-							Math.max(maxResponse.get(row, col)[0], currentEdgeResponse.get(row, col)[0]));
+							Math.max(maxResponse.get(row, col)[0], currentResponse.get(row, col)[0]));
+						
+						L[row][col] += Math.pow(currentResponse.get(row, col)[0], 2);
 					}
 			}
 		}
+		
+		for (int row = 0; row < maxResponse.rows(); row++)
+			for (int col = 0; col < maxResponse.cols(); col++) {
+				L[row][col] = Math.sqrt(L[row][col]);
+			}
+		
+		// Normalize the Max Response
+		/*for (int row = 0; row < maxResponse.rows(); row++)
+			for (int col = 0; col < maxResponse.cols(); col++) {
+				maxResponse.put(row, col, 
+					maxResponse.get(row, col)[0] * (Math.log(1 + L[row][col] / 0.03)) / L[row][col]);
+			}*/
 
 		return maxResponse; 
 	}

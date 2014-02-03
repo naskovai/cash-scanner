@@ -12,22 +12,26 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		test("C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\HoughTransform\\res\\drawable\\drawable\\10_2.jpg");
+		test("C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\Testing\\res\\origin.jpg");
 	}
 	
 	private static void test(String image) {
 		Mat img = Highgui.imread(image, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 		
-		CoinProcessor p = CoinProcessor.getInstance();
-		p.getCoinType(img);
+		//CoinProcessor p = CoinProcessor.getInstance();
+		//p.getCoinType(img);
 		
 		//Imgproc.filter2D(img, img, -1, new GaussianFilter(99,10).getKernel());
-	/*	String path = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\Testing\\res\\";
+		
+		MR8FilterBank filterBank = new MR8FilterBank(9);
+		Mat[] responses = filterBank.getResponses(img).responses;
+		
+		String path = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\Testing\\res\\";
 		for (int i = 0; i < responses.length; i++) {
 			//normalizeFilterResponse(responses[i]);
 			//normalizeIntensity(responses[i]);
 			Highgui.imwrite(path + i + ".jpg", responses[i]);
-		}*/
+		}
 		System.out.println("Success");
 	}
 	
