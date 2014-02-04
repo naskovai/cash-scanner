@@ -1,10 +1,10 @@
 import java.util.Hashtable;
 
-
-public class Coin {
+public class Coin implements java.io.Serializable {
 	private CoinTypes type;
 	private Hashtable<Vector, Integer> means;
-	private Histogram textonsHistogram;
+
+	private transient Histogram textonsHistogram;
 	
 	public Coin(CoinTypes type, Hashtable<Vector, Integer> means) {
 		this.type = type;
@@ -20,5 +20,9 @@ public class Coin {
 	
 	public CoinTypes getType() {
 		return type;
+	}
+	
+	public Hashtable<Vector, Integer> getMeans() {
+		return this.means;
 	}
 }
