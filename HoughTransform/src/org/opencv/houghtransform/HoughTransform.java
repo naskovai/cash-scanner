@@ -10,6 +10,7 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class HoughTransform extends Activity implements CvCameraViewListener2,
 
 	private CameraView mOpenCvCameraView;
 	private ImageProcessResultReceiver mResultReceiver;
+	private ProgressDialog mDialog;
 
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 		@Override
@@ -118,6 +120,10 @@ public class HoughTransform extends Activity implements CvCameraViewListener2,
 		Intent imageProcessor = new Intent(this, ImageProcessor.class);
 		mResultReceiver.setReceiver(this);
 
+		mDialog = new ProgressDialog(this);
+		mDialog.setMessage("Processing the photo...");
+		mDialog.setCancelable(false);
+		mDialog.show();
 		imageProcessor.putExtra("image", compressedImage);
 		imageProcessor.putExtra("displayHeight", displayMetrics.heightPixels);
 		imageProcessor.putExtra("displayWidth", displayMetrics.widthPixels);
@@ -136,6 +142,7 @@ public class HoughTransform extends Activity implements CvCameraViewListener2,
 	@SuppressLint("NewApi")
 	@Override
 	public void onReceiveResult(int resultCode, Bundle resultData) {
+		mDialog.dismiss();
 		System.out.println("RESULT: " + resultCode);
 		Bitmap processedImage = (Bitmap) resultData
 				.getParcelable("resultImage");
@@ -166,9 +173,9 @@ public class HoughTransform extends Activity implements CvCameraViewListener2,
 			LayoutParams lp1 = new LayoutParams(100, 120);
 			ll.addView(coinString, lp1);
 		}
-		
+
 		ll.addView(reset, lp);
-		
+
 		setContentView(ll);
 	}
 }
