@@ -24,8 +24,7 @@ public class CoinProcessor {
 	}
 	
 	public CoinTypes getCoinType(Mat image) {
-		MaxFiltersResponses responses = filterBank.getResponses(image);
-		Hashtable<Vector, Integer> textons = kMeansFinder.getTextons(responses);
+		Hashtable<Vector, Integer> textons = getTextons(image);
 		
 		String res = dump(textons);
 		
@@ -43,7 +42,27 @@ public class CoinProcessor {
 		return histogram;
 	}
 	
-	public void train(Mat[] image, CoinTypes coinType) {
+	public void train(Mat image, CoinTypes coinType) {
+		Hashtable<Vector, Integer> textons = getTextons(image);
+		coinsManager.train(coinType, textons);
+	}
+	
+	public Hashtable<Vector, Integer> getTextons(Mat image) {
+		MaxFiltersResponses responses = filterBank.getResponses(image);
+		Hashtable<Vector, Integer> textons = kMeansFinder.getTextons(responses);
+		return textons;
+	}
+	
+	private Histogram convertToHistogram(Hashtable<Vector, Integer> textons) {
+		Histogram histogram = new Histogram();
+		
+		int colorId = 0;
+		for(Vector v: textons.keySet()) {
+			histogram.put(colorId, (double) textons.get(v));
+			colorId++;
+		}
+
+		return histogram;
 	}
 	
 	private String dump(Hashtable<Vector, Integer> textons) {
@@ -70,17 +89,5 @@ public class CoinProcessor {
 		}
 		
 		return result;
-	}
-	
-	private Histogram convertToHistogram(Hashtable<Vector, Integer> textons) {
-		Histogram histogram = new Histogram();
-		
-		int colorId = 0;
-		for(Vector v: textons.keySet()) {
-			histogram.put(colorId, (double) textons.get(v));
-			colorId++;
-		}
-
-		return histogram;
 	}
 }

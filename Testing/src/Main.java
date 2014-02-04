@@ -12,12 +12,16 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		test("C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\Testing\\res\\origin.jpg");
+		
+		String image = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\Testing\\res\\origin.jpg";
+		//String image = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\training\\10\10_1.jpg";
+		Mat img = Highgui.imread(image, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+		train(img);
+		
+		System.out.println("Success");
 	}
 	
-	private static void test(String image) {
-		Mat img = Highgui.imread(image, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-		
+	private static void test(Mat img) {
 		//CoinProcessor p = CoinProcessor.getInstance();
 		//p.getCoinType(img);
 		
@@ -32,7 +36,10 @@ public class Main {
 			//normalizeIntensity(responses[i]);
 			Highgui.imwrite(path + i + ".jpg", responses[i]);
 		}
-		System.out.println("Success");
+	}
+	
+	private static void train(Mat img) {
+		CoinProcessor.getInstance().train(img, CoinTypes.TwentyFront);
 	}
 	
 	/* 
