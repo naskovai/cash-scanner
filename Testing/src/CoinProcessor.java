@@ -18,7 +18,7 @@ public class CoinProcessor {
 	private CoinsManager coinsManager;
 	
 	private CoinProcessor() {
-		filterBank = new MR8FilterBank(17);
+		filterBank = new MR8FilterBank();
 		kMeansFinder = new KMeansFinder(5);
 		coinsManager = new CoinsManager();
 	}

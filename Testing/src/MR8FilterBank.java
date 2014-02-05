@@ -4,18 +4,16 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class MR8FilterBank {
-	private int filtersKernelSize;
+	private int filtersKernelSize = 13;
+	private int edgeFiltersKernelSize = 9;
+	private int barFiltersKernelSize = 5;
+
 	private GaussianFilter gaussianFilter;
 	private LaplacianOfGaussianFilter logFilter;
 	private EdgeFilter[] edgeFilters;
 	private BarFilter[] barFilters;
 	
 	public MR8FilterBank() {
-		this(3);
-	}
-	
-	public MR8FilterBank(int filtersKernelSize) {
-		this.filtersKernelSize = filtersKernelSize;
 		initializeFilters();
 	}
 	
@@ -105,7 +103,7 @@ public class MR8FilterBank {
 	private Mat getMaxResponse(Mat input, Filter[] filters, int startFilter, int count) {
 		Mat maxResponse = null;
 		
-		double L[][] = new double[input.rows()][input.cols()];
+		//double L[][] = new double[input.rows()][input.cols()];
 
 		for(int i = startFilter; i < startFilter + count; i++) {
 			Mat currentResponse = input.clone();
@@ -120,12 +118,12 @@ public class MR8FilterBank {
 						maxResponse.put(row, col, 
 							Math.max(maxResponse.get(row, col)[0], currentResponse.get(row, col)[0]));
 						
-						L[row][col] += Math.pow(currentResponse.get(row, col)[0], 2);
+						//L[row][col] += Math.pow(currentResponse.get(row, col)[0], 2);
 					}
 			}
 		}
-	
-	/*	for (int row = 0; row < maxResponse.rows(); row++)
+/*	
+		for (int row = 0; row < maxResponse.rows(); row++)
 			for (int col = 0; col < maxResponse.cols(); col++) {
 				L[row][col] = Math.sqrt(L[row][col]);
 			}
@@ -151,50 +149,50 @@ public class MR8FilterBank {
 	private void initializeEdgeFilters() {
 		this.edgeFilters = new EdgeFilter[18];
 
-		this.edgeFilters[0] = new EdgeFilter(this.filtersKernelSize, 0.5, 1.5, 0);
-		this.edgeFilters[1] = new EdgeFilter(this.filtersKernelSize, 0.5, 1.5, Math.PI / 6);
-		this.edgeFilters[2] = new EdgeFilter(this.filtersKernelSize, 0.5, 1.5, 11 * Math.PI / 6);
-		this.edgeFilters[3] = new EdgeFilter(this.filtersKernelSize, 0.5, 1.5, Math.PI / 3);
-		this.edgeFilters[4] = new EdgeFilter(this.filtersKernelSize, 0.5, 1.5, 5 * Math.PI / 3);
-		this.edgeFilters[5] = new EdgeFilter(this.filtersKernelSize, 0.5, 1.5, Math.PI / 2);
+		this.edgeFilters[0] = new EdgeFilter(this.edgeFiltersKernelSize, 0.5, 1.5, 0);
+		this.edgeFilters[1] = new EdgeFilter(this.edgeFiltersKernelSize, 0.5, 1.5, Math.PI / 6);
+		this.edgeFilters[2] = new EdgeFilter(this.edgeFiltersKernelSize, 0.5, 1.5, 11 * Math.PI / 6);
+		this.edgeFilters[3] = new EdgeFilter(this.edgeFiltersKernelSize, 0.5, 1.5, Math.PI / 3);
+		this.edgeFilters[4] = new EdgeFilter(this.edgeFiltersKernelSize, 0.5, 1.5, 5 * Math.PI / 3);
+		this.edgeFilters[5] = new EdgeFilter(this.edgeFiltersKernelSize, 0.5, 1.5, Math.PI / 2);
 		
-		this.edgeFilters[6] = new EdgeFilter(this.filtersKernelSize, 1, 3, 0);
-		this.edgeFilters[7] = new EdgeFilter(this.filtersKernelSize, 1, 3, Math.PI / 6);
-		this.edgeFilters[8] = new EdgeFilter(this.filtersKernelSize, 1, 3, 11 * Math.PI / 6);
-		this.edgeFilters[9] = new EdgeFilter(this.filtersKernelSize, 1, 3, Math.PI / 3);
-		this.edgeFilters[10] = new EdgeFilter(this.filtersKernelSize, 1, 3, 5 * Math.PI / 3);
-		this.edgeFilters[11] = new EdgeFilter(this.filtersKernelSize, 1, 3, Math.PI / 2);
+		this.edgeFilters[6] = new EdgeFilter(this.edgeFiltersKernelSize, 1, 3, 0);
+		this.edgeFilters[7] = new EdgeFilter(this.edgeFiltersKernelSize, 1, 3, Math.PI / 6);
+		this.edgeFilters[8] = new EdgeFilter(this.edgeFiltersKernelSize, 1, 3, 11 * Math.PI / 6);
+		this.edgeFilters[9] = new EdgeFilter(this.edgeFiltersKernelSize, 1, 3, Math.PI / 3);
+		this.edgeFilters[10] = new EdgeFilter(this.edgeFiltersKernelSize, 1, 3, 5 * Math.PI / 3);
+		this.edgeFilters[11] = new EdgeFilter(this.edgeFiltersKernelSize, 1, 3, Math.PI / 2);
 		
-		this.edgeFilters[12] = new EdgeFilter(this.filtersKernelSize, 2, 6, 0);
-		this.edgeFilters[13] = new EdgeFilter(this.filtersKernelSize, 2, 6, Math.PI / 6);
-		this.edgeFilters[14] = new EdgeFilter(this.filtersKernelSize, 2, 6, 11 * Math.PI / 6);
-		this.edgeFilters[15] = new EdgeFilter(this.filtersKernelSize, 2, 6, Math.PI / 3);
-		this.edgeFilters[16] = new EdgeFilter(this.filtersKernelSize, 2, 6, 5 * Math.PI / 3);
-		this.edgeFilters[17] = new EdgeFilter(this.filtersKernelSize, 2, 6, Math.PI / 2);
+		this.edgeFilters[12] = new EdgeFilter(this.edgeFiltersKernelSize, 2, 6, 0);
+		this.edgeFilters[13] = new EdgeFilter(this.edgeFiltersKernelSize, 2, 6, Math.PI / 6);
+		this.edgeFilters[14] = new EdgeFilter(this.edgeFiltersKernelSize, 2, 6, 11 * Math.PI / 6);
+		this.edgeFilters[15] = new EdgeFilter(this.edgeFiltersKernelSize, 2, 6, Math.PI / 3);
+		this.edgeFilters[16] = new EdgeFilter(this.edgeFiltersKernelSize, 2, 6, 5 * Math.PI / 3);
+		this.edgeFilters[17] = new EdgeFilter(this.edgeFiltersKernelSize, 2, 6, Math.PI / 2);
 	}
 	
 	private void initializeBarFilters() {
 		this.barFilters = new BarFilter[18];
 
-		this.barFilters[0] = new BarFilter(this.filtersKernelSize, 0.5, 1.5, 0);
-		this.barFilters[1] = new BarFilter(this.filtersKernelSize, 0.5, 1.5, Math.PI / 6);
-		this.barFilters[2] = new BarFilter(this.filtersKernelSize, 0.5, 1.5, 11 * Math.PI / 6);
-		this.barFilters[3] = new BarFilter(this.filtersKernelSize, 0.5, 1.5, Math.PI / 3);
-		this.barFilters[4] = new BarFilter(this.filtersKernelSize, 0.5, 1.5, 5 * Math.PI / 3);
-		this.barFilters[5] = new BarFilter(this.filtersKernelSize, 0.5, 1.5, Math.PI / 2);
+		this.barFilters[0] = new BarFilter(this.barFiltersKernelSize, 0.5, 1.5, 0);
+		this.barFilters[1] = new BarFilter(this.barFiltersKernelSize, 0.5, 1.5, Math.PI / 6);
+		this.barFilters[2] = new BarFilter(this.barFiltersKernelSize, 0.5, 1.5, 11 * Math.PI / 6);
+		this.barFilters[3] = new BarFilter(this.barFiltersKernelSize, 0.5, 1.5, Math.PI / 3);
+		this.barFilters[4] = new BarFilter(this.barFiltersKernelSize, 0.5, 1.5, 5 * Math.PI / 3);
+		this.barFilters[5] = new BarFilter(this.barFiltersKernelSize, 0.5, 1.5, Math.PI / 2);
 		
-		this.barFilters[6] = new BarFilter(this.filtersKernelSize, 1, 3, 0);
-		this.barFilters[7] = new BarFilter(this.filtersKernelSize, 1, 3, Math.PI / 6);
-		this.barFilters[8] = new BarFilter(this.filtersKernelSize, 1, 3, 11 * Math.PI / 6);
-		this.barFilters[9] = new BarFilter(this.filtersKernelSize, 1, 3, Math.PI / 3);
-		this.barFilters[10] = new BarFilter(this.filtersKernelSize, 1, 3, 5 * Math.PI / 3);
-		this.barFilters[11] = new BarFilter(this.filtersKernelSize, 1, 3, Math.PI / 2);
+		this.barFilters[6] = new BarFilter(this.barFiltersKernelSize, 1, 3, 0);
+		this.barFilters[7] = new BarFilter(this.barFiltersKernelSize, 1, 3, Math.PI / 6);
+		this.barFilters[8] = new BarFilter(this.barFiltersKernelSize, 1, 3, 11 * Math.PI / 6);
+		this.barFilters[9] = new BarFilter(this.barFiltersKernelSize, 1, 3, Math.PI / 3);
+		this.barFilters[10] = new BarFilter(this.barFiltersKernelSize, 1, 3, 5 * Math.PI / 3);
+		this.barFilters[11] = new BarFilter(this.barFiltersKernelSize, 1, 3, Math.PI / 2);
 		
-		this.barFilters[12] = new BarFilter(this.filtersKernelSize, 2, 6, 0);
-		this.barFilters[13] = new BarFilter(this.filtersKernelSize, 2, 6, Math.PI / 6);
-		this.barFilters[14] = new BarFilter(this.filtersKernelSize, 2, 6, 11 * Math.PI / 6);
-		this.barFilters[15] = new BarFilter(this.filtersKernelSize, 2, 6, Math.PI / 3);
-		this.barFilters[16] = new BarFilter(this.filtersKernelSize, 2, 6, 5 * Math.PI / 3);
-		this.barFilters[17] = new BarFilter(this.filtersKernelSize, 2, 6, Math.PI / 2);
+		this.barFilters[12] = new BarFilter(this.barFiltersKernelSize, 2, 6, 0);
+		this.barFilters[13] = new BarFilter(this.barFiltersKernelSize, 2, 6, Math.PI / 6);
+		this.barFilters[14] = new BarFilter(this.barFiltersKernelSize, 2, 6, 11 * Math.PI / 6);
+		this.barFilters[15] = new BarFilter(this.barFiltersKernelSize, 2, 6, Math.PI / 3);
+		this.barFilters[16] = new BarFilter(this.barFiltersKernelSize, 2, 6, 5 * Math.PI / 3);
+		this.barFilters[17] = new BarFilter(this.barFiltersKernelSize, 2, 6, Math.PI / 2);
 	}
 }

@@ -29,7 +29,7 @@ public class Main {
 		
 		//Imgproc.filter2D(img, img, -1, new GaussianFilter(99,10).getKernel());
 		
-		MR8FilterBank filterBank = new MR8FilterBank(9);
+		MR8FilterBank filterBank = new MR8FilterBank();
 		Mat[] responses = filterBank.getResponses(img).responses;
 		
 		String path = "./res/";
