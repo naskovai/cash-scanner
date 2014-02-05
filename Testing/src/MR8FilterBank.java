@@ -50,28 +50,32 @@ public class MR8FilterBank {
 	}
 	
 	private void zeroMeanAndStandartDeviationNormalization(Mat image) {
-		Mat clonedImage = image.clone();
-		double mean = getMean(clonedImage);
-		for (int row = 0; row < clonedImage.rows(); row++)
-			for (int col = 0; col < clonedImage.cols(); col++) {
-				clonedImage.put(row, col, Math.pow(clonedImage.get(row, col)[0] - mean, 2));
-			}
-		
-		double deviation = Math.sqrt(getMean(clonedImage));
-		for (int row = 0; row < image.rows(); row++)
-			for (int col = 0; col < image.cols(); col++) {
-				image.put(row, col, (image.get(row, col)[0] - mean) / deviation);
-			}
-	}
-	
-	private double getMean(Mat image) {
-		double mean = 0;
-		for (int row = 0; row < image.rows(); row++) {
-			for (int col = 0; col < image.cols(); col++) {
-				mean += image.get(row, col)[0];
+		for (int column = 0; column < image.cols(); column++) {
+			double standardDeviation = getStandardDeviation(image, column);
+			for (int row = 0; row < image.rows(); row++) {
+				image.put(row, column, image.get(row, column)[0] / standardDeviation);
 			}
 		}
-		mean /= (image.rows() * image.cols());
+	}
+	
+	private double getStandardDeviation(Mat image, int column) {
+		double mean = getMean(image, column);
+		
+		double standardDeviation = 0;
+		for (int row = 0; row < image.rows(); row++) {
+			standardDeviation += Math.pow(image.get(row, column)[0] - mean, 2);
+		}
+		standardDeviation /= image.rows();
+		standardDeviation = Math.sqrt(standardDeviation);
+		return standardDeviation;
+	}
+	
+	private double getMean(Mat image, int column) {
+		double mean = 0;
+		for (int row = 0; row < image.rows(); row++) {
+			mean += image.get(row, column)[0];
+		}
+		mean /= (image.rows());
 		return mean;
 	}
 	
@@ -120,19 +124,19 @@ public class MR8FilterBank {
 					}
 			}
 		}
-		
-		for (int row = 0; row < maxResponse.rows(); row++)
+	
+	/*	for (int row = 0; row < maxResponse.rows(); row++)
 			for (int col = 0; col < maxResponse.cols(); col++) {
 				L[row][col] = Math.sqrt(L[row][col]);
 			}
 		
 		// Normalize the Max Response
-	/*	for (int row = 0; row < maxResponse.rows(); row++)
+		for (int row = 0; row < maxResponse.rows(); row++)
 			for (int col = 0; col < maxResponse.cols(); col++) {
 				maxResponse.put(row, col, 
 					maxResponse.get(row, col)[0] * (Math.log(1 + L[row][col] / 0.03)) / L[row][col]);
-			}*/
-
+			}
+*/
 		return maxResponse; 
 	}
 	
