@@ -45,28 +45,55 @@ public class MR8FilterBank {
 		Mat image = input.clone();
 		Imgproc.resize(image, image, new Size(128, 128));
 		normalizeIntensity(image);
+		//zeroMeanAndStandartDeviationNormalization(image);
 		return image;
+	}
+	
+	private void zeroMeanAndStandartDeviationNormalization(Mat image) {
+		Mat clonedImage = image.clone();
+		double mean = getMean(clonedImage);
+		for (int row = 0; row < clonedImage.rows(); row++)
+			for (int col = 0; col < clonedImage.cols(); col++) {
+				clonedImage.put(row, col, Math.pow(clonedImage.get(row, col)[0] - mean, 2));
+			}
+		
+		double deviation = Math.sqrt(getMean(clonedImage));
+		for (int row = 0; row < image.rows(); row++)
+			for (int col = 0; col < image.cols(); col++) {
+				image.put(row, col, (image.get(row, col)[0] - mean) / deviation);
+			}
+	}
+	
+	private double getMean(Mat image) {
+		double mean = 0;
+		for (int row = 0; row < image.rows(); row++) {
+			for (int col = 0; col < image.cols(); col++) {
+				mean += image.get(row, col)[0];
+			}
+		}
+		mean /= (image.rows() * image.cols());
+		return mean;
 	}
 	
 	private void normalizeIntensity(Mat image) {
 		int maxInt = 0;
 		int minInt = 255;
  
-		for (int i = 0; i < image.cols(); i++) {
-			for(int j = 0; j < image.rows(); j++) {
-				if (image.get(j, i)[0] > maxInt) {
-					maxInt = (int) image.get(j, i)[0];
+		for (int i = 0; i < image.rows(); i++) {
+			for(int j = 0; j < image.cols(); j++) {
+				if (image.get(i, j)[0] > maxInt) {
+					maxInt = (int) image.get(i, j)[0];
 				}
-				if (image.get(j, i)[0] < minInt) {
-					minInt = (int) image.get(j, i)[0];
+				if (image.get(i, j)[0] < minInt) {
+					minInt = (int) image.get(i, j)[0];
 				}
 			}
 		}
   
-		for (int i = 0; i < image.cols(); i++) {
-			for(int j = 0; j < image.rows(); j++) {
-				double normalizedValue = (image.get(j, i)[0] - minInt) * 255 / (maxInt - minInt);
-				image.put(j, i, normalizedValue);
+		for (int i = 0; i < image.rows(); i++) {
+			for(int j = 0; j < image.cols(); j++) {
+				double normalizedValue = (image.get(i, j)[0] - minInt) * 255 / (maxInt - minInt);
+				image.put(i, j, normalizedValue);
 			}
 		}
 	}
@@ -100,7 +127,7 @@ public class MR8FilterBank {
 			}
 		
 		// Normalize the Max Response
-		/*for (int row = 0; row < maxResponse.rows(); row++)
+	/*	for (int row = 0; row < maxResponse.rows(); row++)
 			for (int col = 0; col < maxResponse.cols(); col++) {
 				maxResponse.put(row, col, 
 					maxResponse.get(row, col)[0] * (Math.log(1 + L[row][col] / 0.03)) / L[row][col]);

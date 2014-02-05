@@ -16,7 +16,9 @@ public class Main {
 		String image = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\Testing\\res\\origin.jpg";
 		//String image = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\training\\10\10_1.jpg";
 		Mat img = Highgui.imread(image, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-		train(img);
+		
+		test(img);
+		//train(img);
 		
 		System.out.println("Success");
 	}
