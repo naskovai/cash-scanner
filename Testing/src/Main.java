@@ -13,7 +13,7 @@ public class Main {
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
-		String image = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\Testing\\res\\origin.jpg";
+		String image = "./res/origin.jpg";
 		//String image = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\training\\10\10_1.jpg";
 		Mat img = Highgui.imread(image, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 		
@@ -32,7 +32,7 @@ public class Main {
 		MR8FilterBank filterBank = new MR8FilterBank(9);
 		Mat[] responses = filterBank.getResponses(img).responses;
 		
-		String path = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\Testing\\res\\";
+		String path = "./res/";
 		for (int i = 0; i < responses.length; i++) {
 			//normalizeFilterResponse(responses[i]);
 			//normalizeIntensity(responses[i]);
