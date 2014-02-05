@@ -1,5 +1,6 @@
 package org.opencv.houghtransform;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 import org.opencv.android.Utils;
@@ -89,7 +90,7 @@ public class ImageProcessor extends IntentService {
 
 		// Obtain an array with circles using Hough Transform algorithm
 		Mat circles = getCircles(sobelImage);
-		HoughCircle[] houghCircles = getCirclesMatrices(workingImage, circles);
+		ArrayList<HoughCircle> houghCircles = getCirclesMatrices(workingImage, circles);
 
 		// Process the coin candidates using MR8 Filter bank, K-means clustering
 		// and histogram comparison
@@ -154,13 +155,17 @@ public class ImageProcessor extends IntentService {
 		return circles;
 	}
 
-	private int[] getCoinValues(HoughCircle[] coins) {
-		int[] coinValues = new int[coins.length];
+	private int[] getCoinValues(ArrayList<HoughCircle> coins) {
+		int[] coinValues = new int[coins.size()];
 
-		for (int i = 0; i < coins.length; i++) {
+		for (int i = 0; i < coins.size(); i++) {
 			System.out.println("Processing coin candidate: " + i);
+			System.out.println("coins[i].getPixelMatrix().rows():"
+					+ coins.get(i).getPixelMatrix().rows());
+			System.out.println("coins[i].getPixelMatrix().cols():"
+					+ coins.get(i).getPixelMatrix().cols());
 			switch (CoinProcessor.getInstance().getCoinType(
-					coins[i].getPixelMatrix())) {
+					coins.get(i).getPixelMatrix())) {
 			case OneFront:
 				coinValues[i] = 1;
 				break;
@@ -191,41 +196,41 @@ public class ImageProcessor extends IntentService {
 		return coinValues;
 	}
 
-	private void drawCircles(Mat image, int[] coinValues, HoughCircle[] circles) {
-		for (int i = 0; i < circles.length; i++) {
+	private void drawCircles(Mat image, int[] coinValues, ArrayList<HoughCircle> circles) {
+		for (int i = 0; i < circles.size(); i++) {
 			switch (coinValues[i]) {
 			case 1:
-				Core.circle(image, circles[i].getCenter(),
-						(int) circles[i].getRadius(), new Scalar(100d, 0d, 0d),
+				Core.circle(image, circles.get(i).getCenter(),
+						(int) circles.get(i).getRadius(), new Scalar(100d, 0d, 0d),
 						2);
 				break;
 			case 2:
-				Core.circle(image, circles[i].getCenter(),
-						(int) circles[i].getRadius(), new Scalar(200d, 0d, 0d),
+				Core.circle(image, circles.get(i).getCenter(),
+						(int) circles.get(i).getRadius(), new Scalar(200d, 0d, 0d),
 						2);
 				break;
 			case 5:
-				Core.circle(image, circles[i].getCenter(),
-						(int) circles[i].getRadius(), new Scalar(0d, 100d, 0d),
+				Core.circle(image, circles.get(i).getCenter(),
+						(int) circles.get(i).getRadius(), new Scalar(0d, 100d, 0d),
 						2);
 				break;
 			case 10:
-				Core.circle(image, circles[i].getCenter(),
-						(int) circles[i].getRadius(), new Scalar(0d, 200d, 0d),
+				Core.circle(image, circles.get(i).getCenter(),
+						(int) circles.get(i).getRadius(), new Scalar(0d, 200d, 0d),
 						2);
 				break;
 			case 20:
-				Core.circle(image, circles[i].getCenter(),
-						(int) circles[i].getRadius(), new Scalar(0d, 0d, 100d),
+				Core.circle(image, circles.get(i).getCenter(),
+						(int) circles.get(i).getRadius(), new Scalar(0d, 0d, 100d),
 						2);
 				break;
 			case 50:
-				Core.circle(image, circles[i].getCenter(),
-						(int) circles[i].getRadius(), new Scalar(0d, 0d, 200d),
+				Core.circle(image, circles.get(i).getCenter(),
+						(int) circles.get(i).getRadius(), new Scalar(0d, 0d, 200d),
 						2);
 				break;
 			case 100:
-				Core.circle(image, circles[i].getCenter(), (int) circles[i]
+				Core.circle(image, circles.get(i).getCenter(), (int) circles.get(i)
 						.getRadius(), new Scalar(255d, 255d, 255d), 2);
 				break;
 			default:
@@ -234,7 +239,7 @@ public class ImageProcessor extends IntentService {
 		}
 	}
 
-	private HoughCircle[] getCirclesMatrices(final Mat originalImage,
+	private ArrayList<HoughCircle> getCirclesMatrices(final Mat originalImage,
 			final Mat circles) {
 		int radius = 0;
 		int left = 0;
@@ -242,7 +247,7 @@ public class ImageProcessor extends IntentService {
 		int top = 0;
 		int bottom = 0;
 
-		HoughCircle[] outCircles = new HoughCircle[circles.cols()];
+		ArrayList<HoughCircle> outCircles = new ArrayList<HoughCircle>();
 		Mat outMatrix = new Mat();
 		System.out.println("circles.cols(): " + circles.cols());
 		if (circles.rows() == 1) {
@@ -257,13 +262,10 @@ public class ImageProcessor extends IntentService {
 						&& right <= originalImage.cols()) {
 					outMatrix = originalImage.submat(new Range(top, bottom),
 							new Range(left, right));
-				} else {
-					outMatrix = originalImage.submat(new Range(0, 0),
-							new Range(0, 0));
-				}
 
-				outCircles[i] = new HoughCircle(outMatrix, new Point(
-						circles.get(0, i)[0], circles.get(0, i)[1]), radius);
+					outCircles.add(new HoughCircle(outMatrix, new Point(circles
+							.get(0, i)[0], circles.get(0, i)[1]), radius));
+				}
 			}
 		}
 
