@@ -46,7 +46,7 @@ public class MR8FilterBank {
 		//zeroMeanAndStandartDeviationNormalization(image);
 		return image;
 	}
-	
+/*	
 	private void zeroMeanAndStandartDeviationNormalization(Mat image) {
 		for (int column = 0; column < image.cols(); column++) {
 			double standardDeviation = getStandardDeviation(image, column);
@@ -76,7 +76,7 @@ public class MR8FilterBank {
 		mean /= (image.rows());
 		return mean;
 	}
-	
+*/	
 	private void normalizeIntensity(Mat image) {
 		int maxInt = 0;
 		int minInt = 255;

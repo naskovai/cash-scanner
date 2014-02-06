@@ -32,6 +32,10 @@ public class Histogram extends Hashtable<Integer, Double> {
 		
 		return minDistance;
 	}
+	
+	private Histogram align(Histogram computedHistogram) {
+		return null;
+	}
 
 	private void permute(int[] indexes, int n, final Histogram computedHistogram) {
 		if (n == 0) {
