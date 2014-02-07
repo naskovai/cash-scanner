@@ -14,11 +14,11 @@ public class Main {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
 		//String image = "./res/20_4.jpg";
-		String image = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\training\\5\\5_4.jpg";
+		String image = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\training\\100\\2.jpg";
 		Mat img = Highgui.imread(image, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 		
 		test(img);
-		//train(img, CoinTypes.FiftyFront);
+		//train(img, CoinTypes.LevFront);
 
 		System.out.println("Success");
 	}
