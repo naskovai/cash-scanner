@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class CoinsManager {
-	private static final String storageFileName = "storage"; 
+	private static final String storageFileName = "res/data/storage"; 
 
 	private double eps = 0.4;
 	private Hashtable<CoinTypes, Coin> coins;
@@ -21,7 +21,7 @@ public class CoinsManager {
 			coins = new Hashtable<CoinTypes, Coin>();
 		}
 	}
-	
+
 	public CoinTypes getCoinType(Histogram histogram) {
 		double minDistance = Double.MAX_VALUE;
 		CoinTypes coinType = CoinTypes.None;
