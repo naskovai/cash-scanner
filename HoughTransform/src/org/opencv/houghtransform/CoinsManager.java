@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class CoinsManager {
-	private static final String storageFileName = "res/data/storage"; 
+	private static final String storageFileName = "res/raw/storage"; 
 
 	private double eps = 0.4;
 	private Hashtable<CoinTypes, Coin> coins;
