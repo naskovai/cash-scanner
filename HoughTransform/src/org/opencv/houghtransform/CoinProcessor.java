@@ -1,15 +1,14 @@
 package org.opencv.houghtransform;
 import java.util.Hashtable;
-import java.util.Hashtable;
 
 import org.opencv.core.Mat;
 
 public class CoinProcessor {
 	private static CoinProcessor instance = null;
 
-	public static CoinProcessor getInstance() {
+	public static CoinProcessor getInstance(Hashtable<CoinTypes, Coin> storage) {
 	   if(instance == null) {
-    	  instance = new CoinProcessor();
+    	  instance = new CoinProcessor(storage);
       	}
       	return instance;
    	}
@@ -18,10 +17,10 @@ public class CoinProcessor {
 	private KMeansFinder kMeansFinder;
 	private CoinsManager coinsManager;
 	
-	private CoinProcessor() {
+	private CoinProcessor(Hashtable<CoinTypes, Coin> storage) {
 		filterBank = new MR8FilterBank();
 		kMeansFinder = new KMeansFinder(10);
-		coinsManager = new CoinsManager();
+		coinsManager = new CoinsManager(storage);
 	}
 	
 	public CoinTypes getCoinType(Mat image) {
@@ -46,31 +45,5 @@ public class CoinProcessor {
 		MaxFiltersResponses responses = filterBank.getResponses(image);
 		Hashtable<Vector, Integer> textons = kMeansFinder.getTextons(responses);
 		return textons;
-	}
-	
-	private String dump(Hashtable<Vector, Integer> textons) {
-		String result = "";
-		
-		int index = 0;
-		for(Vector v: textons.keySet()) {
-			String variableName = "vector_" + String.valueOf(index);
-			
-			result += "Vector " + variableName + " = new Vector(8);\n";
-			result += "setVectorValues(" + variableName + ", ";
-			
-			for(int i = 0; i < 7; i++) {
-				result += String.valueOf(v.get(i));
-				result += ",";
-			}
-			result += String.valueOf(v.get(7));
-			result += ");\n";
-			
-			result += "learnedMeans.put(" + variableName + ", " + String.valueOf(textons.get(v)) + ");\n";
-			result += "\n";
-			
-			index++;
-		}
-		
-		return result;
 	}
 }

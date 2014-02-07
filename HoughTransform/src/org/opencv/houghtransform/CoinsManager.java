@@ -1,12 +1,7 @@
 package org.opencv.houghtransform;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class CoinsManager {
@@ -15,11 +10,8 @@ public class CoinsManager {
 	private double eps = 0.4;
 	private Hashtable<CoinTypes, Coin> coins;
 	
-	public CoinsManager() {
-		load();
-		if (coins == null) {
-			coins = new Hashtable<CoinTypes, Coin>();
-		}
+	public CoinsManager(Hashtable<CoinTypes, Coin> storage) {
+		coins = storage;
 	}
 
 	public CoinTypes getCoinType(Histogram histogram) {
@@ -51,37 +43,6 @@ public class CoinsManager {
 		coins.put(coinType, coin);
 
 		store();
-	}
-	
-	@SuppressWarnings("unchecked")
-	private void load() {
-		try {
-			ensureStorageFileCreated();
-			FileInputStream fileInStream = new FileInputStream(storageFileName);
-			ObjectInputStream inStream = new ObjectInputStream(fileInStream);
-			coins = (Hashtable<CoinTypes, Coin>)inStream.readObject();
-			inStream.close();
-			fileInStream.close();
-		}
-		catch(EOFException eofEx) {
-		}
-		catch(IOException i) {
-			i.printStackTrace();
-			return;
-		}
-		catch(ClassNotFoundException c) {
-			c.printStackTrace();
-			return;
-		}
-	}
-	
-	private void ensureStorageFileCreated() {
-		try {
-			new File(storageFileName).createNewFile();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	private void store() {

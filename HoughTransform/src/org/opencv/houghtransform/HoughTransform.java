@@ -1,5 +1,11 @@
 package org.opencv.houghtransform;
 
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.util.Hashtable;
+
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.LoaderCallbackInterface;
@@ -128,6 +134,27 @@ public class HoughTransform extends Activity implements CvCameraViewListener2,
 		imageProcessor.putExtra("displayHeight", displayMetrics.heightPixels);
 		imageProcessor.putExtra("displayWidth", displayMetrics.widthPixels);
 		imageProcessor.putExtra("resultReceiver", mResultReceiver);
+		try {
+			InputStream fileInStream = getResources().openRawResource(R.raw.storage);
+			ObjectInputStream inStream = new ObjectInputStream(fileInStream);
+			@SuppressWarnings("unchecked")
+			Hashtable<CoinTypes, Coin> coins = (Hashtable<CoinTypes, Coin>)inStream.readObject();
+			inStream.close();
+			fileInStream.close();
+			imageProcessor.putExtra("coins", coins);
+		}
+		catch(EOFException eofEx) {
+		}
+		catch(IOException i) {
+			i.printStackTrace();
+			return;
+		}
+		catch(ClassNotFoundException c) {
+			c.printStackTrace();
+			return;
+		}
+
+		
 		startService(imageProcessor);
 	}
 

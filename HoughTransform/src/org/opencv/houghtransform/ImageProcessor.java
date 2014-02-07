@@ -21,9 +21,12 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 
 public class ImageProcessor extends IntentService {
-
+	
+	private Hashtable<CoinTypes, Coin> storage;
+	
 	public ImageProcessor() {
 		super("ImageProcessor");
+		
 	}
 
 	public ImageProcessor(String name) {
@@ -62,6 +65,9 @@ public class ImageProcessor extends IntentService {
 		int screenHeight = workIntent.getIntExtra("displayHeight", 0);
 		ResultReceiver resultReceiver = workIntent
 				.getParcelableExtra("resultReceiver");
+		
+		storage = workIntent
+				.getParcelableExtra("coins");
 		Bitmap workingBitmap = null;
 		Mat colorImage = new Mat();
 		Mat workingImage = new Mat();
@@ -70,6 +76,7 @@ public class ImageProcessor extends IntentService {
 		// Load the image
 		// workingBitmap = BitmapFactory.decodeResource(getResources(),
 		// R.drawable.test7);
+		
 		workingBitmap = BitmapFactory.decodeByteArray(compressedImage, 0,
 				compressedImage.length);
 
@@ -164,7 +171,7 @@ public class ImageProcessor extends IntentService {
 					+ coins.get(i).getPixelMatrix().rows());
 			System.out.println("coins[i].getPixelMatrix().cols():"
 					+ coins.get(i).getPixelMatrix().cols());
-			switch (CoinProcessor.getInstance().getCoinType(
+			switch (CoinProcessor.getInstance(storage).getCoinType(
 					coins.get(i).getPixelMatrix())) {
 			case OneFront:
 				coinValues[i] = 1;

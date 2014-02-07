@@ -13,7 +13,7 @@ import android.util.Log;
 
 public class CameraView extends JavaCameraView implements PictureCallback {
 
-	private static final String TAG = "Sample::Tutorial3View";
+	private static final String TAG = "CameraView";
 	private CameraCallback returnInterface;
 
 	public CameraView(Context context, AttributeSet attrs) {
