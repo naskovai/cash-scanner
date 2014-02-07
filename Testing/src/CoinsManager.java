@@ -11,7 +11,7 @@ import java.util.Hashtable;
 public class CoinsManager {
 	private static final String storageFileName = "storage"; 
 
-	private double eps = 1;
+	private double eps = 0.4;
 	private Hashtable<CoinTypes, Coin> coins;
 	
 	public CoinsManager() {

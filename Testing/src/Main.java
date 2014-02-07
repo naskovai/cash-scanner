@@ -13,22 +13,24 @@ public class Main {
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
-		String image = "./res/origin.jpg";
-		//String image = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\training\\10\10_1.jpg";
+		//String image = "./res/20_4.jpg";
+		String image = "C:\\Users\\rumen\\Documents\\GitHub\\cash-scanner\\training\\10\\10_4.jpg";
 		Mat img = Highgui.imread(image, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 		
 		test(img);
-		//train(img);
-		
+		//train(img, CoinTypes.TenFront);
+
 		System.out.println("Success");
 	}
 	
 	private static void test(Mat img) {
-		//CoinProcessor p = CoinProcessor.getInstance();
-		//p.getCoinType(img);
+		CoinProcessor p = CoinProcessor.getInstance();
+		CoinTypes type = p.getCoinType(img);
+		
+		System.out.println(type.toString());
 		
 		//Imgproc.filter2D(img, img, -1, new GaussianFilter(99,10).getKernel());
-		
+/*		
 		MR8FilterBank filterBank = new MR8FilterBank();
 		Mat[] responses = filterBank.getResponses(img).responses;
 		
@@ -37,11 +39,11 @@ public class Main {
 			//normalizeFilterResponse(responses[i]);
 			//normalizeIntensity(responses[i]);
 			Highgui.imwrite(path + i + ".jpg", responses[i]);
-		}
+		}*/
 	}
 	
-	private static void train(Mat img) {
-		CoinProcessor.getInstance().train(img, CoinTypes.TwentyFront);
+	private static void train(Mat img, CoinTypes type) {
+		CoinProcessor.getInstance().train(img, type);
 	}
 	
 	/* 

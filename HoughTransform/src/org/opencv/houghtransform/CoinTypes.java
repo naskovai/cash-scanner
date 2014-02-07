@@ -8,5 +8,9 @@ public enum CoinTypes {
 	TenFront,
 	TwentyFront,
 	FiftyFront,
-	LevFront
+	LevFront,
+	
+	BgFront,
+	BgBack,
+	CentBack
 }

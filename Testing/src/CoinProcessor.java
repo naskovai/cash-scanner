@@ -19,26 +19,20 @@ public class CoinProcessor {
 	
 	private CoinProcessor() {
 		filterBank = new MR8FilterBank();
-		kMeansFinder = new KMeansFinder(5);
+		kMeansFinder = new KMeansFinder(10);
 		coinsManager = new CoinsManager();
 	}
 	
 	public CoinTypes getCoinType(Mat image) {
 		Hashtable<Vector, Integer> textons = getTextons(image);
-		
-		String res = dump(textons);
-		
-		Histogram histogram = convertToHistogram(textons);
-		histogram.normalize();
-		
+		Histogram histogram = new Histogram(textons);		
 		CoinTypes coinType = coinsManager.getCoinType(histogram);
 		return coinType;
 	}
 	
 	public Histogram getHistogram(Hashtable<Vector, Integer> means) {
 		Hashtable<Vector, Integer> textons = kMeansFinder.getTextons(means);
-		Histogram histogram = convertToHistogram(textons);
-		histogram.normalize();
+		Histogram histogram = new Histogram(textons);
 		return histogram;
 	}
 	
@@ -51,18 +45,6 @@ public class CoinProcessor {
 		MaxFiltersResponses responses = filterBank.getResponses(image);
 		Hashtable<Vector, Integer> textons = kMeansFinder.getTextons(responses);
 		return textons;
-	}
-	
-	private Histogram convertToHistogram(Hashtable<Vector, Integer> textons) {
-		Histogram histogram = new Histogram();
-		
-		int colorId = 0;
-		for(Vector v: textons.keySet()) {
-			histogram.put(colorId, (double) textons.get(v));
-			colorId++;
-		}
-
-		return histogram;
 	}
 	
 	private String dump(Hashtable<Vector, Integer> textons) {

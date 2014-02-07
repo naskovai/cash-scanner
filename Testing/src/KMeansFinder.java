@@ -20,7 +20,7 @@ public class KMeansFinder {
 	}
 	
 	private Hashtable<Vector, Integer> convertToFrequenceByVector(Vector[] vectors) {
-		Hashtable<Vector, Integer> frequenceByVector = new Hashtable<>(vectors.length);
+		Hashtable<Vector, Integer> frequenceByVector = new Hashtable<Vector, Integer>(vectors.length);
 		for(int i = 0; i < vectors.length; i++) {
 			frequenceByVector.put(vectors[i], 1);
 		}
@@ -31,7 +31,7 @@ public class KMeansFinder {
 		Hashtable<Vector, ArrayList<Vector>> textons = new Hashtable<Vector, ArrayList<Vector>>();
 		seed(textons, means.keySet());
 		
-		int iterations = 10;
+		int iterations = 30;
 		while(iterations > 0) {
 			iterations--;
 			

@@ -1,9 +1,7 @@
 package org.opencv.houghtransform;
 import java.util.ArrayList;
-import java.util.Set;
 
-
-public class Vector {
+public class Vector implements java.io.Serializable {
 	private ArrayList<Double> vector;
 	
 	public Vector(int size) {

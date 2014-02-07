@@ -1,7 +1,6 @@
 package org.opencv.houghtransform;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Hashtable;
 import java.util.Set;
 
 
@@ -33,7 +32,7 @@ public class KMeansFinder {
 		Hashtable<Vector, ArrayList<Vector>> textons = new Hashtable<Vector, ArrayList<Vector>>();
 		seed(textons, means.keySet());
 		
-		int iterations = 10;
+		int iterations = 30;
 		while(iterations > 0) {
 			iterations--;
 			

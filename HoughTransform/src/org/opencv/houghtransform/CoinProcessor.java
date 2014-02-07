@@ -1,5 +1,7 @@
 package org.opencv.houghtransform;
 import java.util.Hashtable;
+import java.util.Hashtable;
+
 import org.opencv.core.Mat;
 
 public class CoinProcessor {
@@ -17,32 +19,33 @@ public class CoinProcessor {
 	private CoinsManager coinsManager;
 	
 	private CoinProcessor() {
-		filterBank = new MR8FilterBank(17);
-		kMeansFinder = new KMeansFinder(5);
+		filterBank = new MR8FilterBank();
+		kMeansFinder = new KMeansFinder(10);
 		coinsManager = new CoinsManager();
 	}
 	
 	public CoinTypes getCoinType(Mat image) {
-		MaxFiltersResponses responses = filterBank.getResponses(image);
-		Hashtable<Vector, Integer> textons = kMeansFinder.getTextons(responses);
-		
-		//String res = dump(textons);
-		
-		Histogram histogram = convertToHistogram(textons);
-		histogram.normalize();
-		
+		Hashtable<Vector, Integer> textons = getTextons(image);
+		Histogram histogram = new Histogram(textons);		
 		CoinTypes coinType = coinsManager.getCoinType(histogram);
 		return coinType;
 	}
 	
 	public Histogram getHistogram(Hashtable<Vector, Integer> means) {
 		Hashtable<Vector, Integer> textons = kMeansFinder.getTextons(means);
-		Histogram histogram = convertToHistogram(textons);
-		histogram.normalize();
+		Histogram histogram = new Histogram(textons);
 		return histogram;
 	}
 	
-	public void train(Mat[] image, CoinTypes coinType) {
+	public void train(Mat image, CoinTypes coinType) {
+		Hashtable<Vector, Integer> textons = getTextons(image);
+		coinsManager.train(coinType, textons);
+	}
+	
+	public Hashtable<Vector, Integer> getTextons(Mat image) {
+		MaxFiltersResponses responses = filterBank.getResponses(image);
+		Hashtable<Vector, Integer> textons = kMeansFinder.getTextons(responses);
+		return textons;
 	}
 	
 	private String dump(Hashtable<Vector, Integer> textons) {
@@ -69,17 +72,5 @@ public class CoinProcessor {
 		}
 		
 		return result;
-	}
-	
-	private Histogram convertToHistogram(Hashtable<Vector, Integer> textons) {
-		Histogram histogram = new Histogram();
-		
-		int colorId = 0;
-		for(Vector v: textons.keySet()) {
-			histogram.put(colorId, (double) textons.get(v));
-			colorId++;
-		}
-
-		return histogram;
 	}
 }

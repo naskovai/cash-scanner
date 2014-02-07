@@ -32,17 +32,35 @@ public abstract class Filter {
 						getKernelElementValue(Math.abs(i - center.getX()), Math.abs(j - center.getY()));
 				kernel.put(i, j, kernelElementValue);
 			}	
-		return normalize(kernel, size);
+		
+		//kernel = normalize(kernel, size, getL1Norm(kernel, size));
+		kernel = normalize(kernel, size, sum(kernel, size));
+		return kernel;
 	}
 	
-	private Mat normalize(Mat kernel, int size) {
-		double normalizationValue = 1 / sum(kernel, size); 
+	private Mat normalize(Mat kernel, int size, double k) {
 		for (int i = 0; i < size; i++)
 			for (int j = 0; j < size; j++) {
 				double kernelElement = kernel.get(i, j)[0];
-				kernel.put(i, j, kernelElement * normalizationValue);
+				kernel.put(i, j, kernelElement / k);
 			}
 		return kernel;
+	}
+	
+	private double getL1Norm(Mat kernel, int size) {
+		double maxColumnSum = Double.MIN_VALUE;
+		for (int column = 0; column < size; column++) {
+			maxColumnSum = Math.max(maxColumnSum, getColumnSum(kernel, size, column));
+		}
+		return maxColumnSum;
+	}
+	
+	private double getColumnSum(Mat kernel, int size, int column) {
+		double sum = 0;
+		for (int row = 0; row < size; row++) {
+			sum += Math.abs(kernel.get(row, column)[0]);
+		}
+		return sum;
 	}
 	
 	private double sum(Mat kernel, int size) {

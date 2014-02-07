@@ -4,7 +4,7 @@ import org.opencv.core.Mat;
 
 public class MaxFiltersResponses {
 	private int responseMatrixSize;
-	private Mat[] responses;
+	public Mat[] responses;
 	private Vector[] vectors;
 	
 	public MaxFiltersResponses(int responseMatrixSize, Mat[] responses) {
