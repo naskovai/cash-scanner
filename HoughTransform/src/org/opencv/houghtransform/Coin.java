@@ -14,7 +14,7 @@ public class Coin implements java.io.Serializable {
 
 	public Histogram getHistogram() {
 		if (textonsHistogram == null) {
-			this.textonsHistogram = CoinProcessor.getInstance(null).getHistogram(this.means);
+			this.textonsHistogram = CoinProcessor.getInstance().getHistogram(this.means);
 		}
 		return textonsHistogram;
 	}

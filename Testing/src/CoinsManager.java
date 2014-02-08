@@ -16,6 +16,7 @@ public class CoinsManager {
 	
 	public CoinsManager() {
 		load();
+		//System.out.println(dump());
 		if (coins == null) {
 			coins = new Hashtable<CoinTypes, Coin>();
 		}
@@ -94,5 +95,43 @@ public class CoinsManager {
 		catch(IOException i) {
 			i.printStackTrace();
 		}
+	}
+	
+	private String dump() {
+		String res = "";
+		res += "coins = new Hashtable<CoinTypes, Coin>();\n";
+		int i = 0;
+		for(CoinTypes key: coins.keySet()) {
+			res += dumpCoin(coins.get(key), i);
+			res += "coins.put(CoinTypes." + key + ", coin_" + i + ");\n";
+			i++;
+		}
+		return res;
+	}
+	
+	public String dumpCoin(Coin coin, int i) {
+		Hashtable<Vector, Integer> means = coin.getMeans();
+		CoinTypes type = coin.getType();
+		
+		String res = "Hashtable<Vector, Integer> means_" + i + " = new Hashtable<Vector, Integer>();\n";
+		int j = 0;
+		for(Vector key: means.keySet()) {
+			res += dumpVector(key, i, j);
+			res += "means_" + i + ".put(v_" + i + "_" + j + "," + means.get(key) + ");\n";
+			j++;
+		}
+		res += "Coin coin_" + i + " = new Coin(CoinTypes." + type + ", means_" + i + ");\n";
+		return res;
+	}
+	
+	public String dumpVector(Vector vector, int i, int j) {
+		String res = "Vector v_" + i + "_" + j + " = new Vector(" + vector.size() + ");";
+		
+		for (int index = 0; index < vector.size(); index++) {
+			res += "v_" + i + "_" + j + ".set(" + index + "," + vector.get(index) + ");";
+		}
+		res += "\n";
+
+		return res;
 	}
 }

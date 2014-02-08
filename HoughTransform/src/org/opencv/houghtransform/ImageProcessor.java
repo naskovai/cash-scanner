@@ -22,8 +22,6 @@ import android.os.ResultReceiver;
 
 public class ImageProcessor extends IntentService {
 	
-	private Hashtable<CoinTypes, Coin> storage;
-	
 	public ImageProcessor() {
 		super("ImageProcessor");
 		
@@ -66,8 +64,6 @@ public class ImageProcessor extends IntentService {
 		ResultReceiver resultReceiver = workIntent
 				.getParcelableExtra("resultReceiver");
 		
-		storage = workIntent
-				.getParcelableExtra("coins");
 		Bitmap workingBitmap = null;
 		Mat colorImage = new Mat();
 		Mat workingImage = new Mat();
@@ -171,7 +167,7 @@ public class ImageProcessor extends IntentService {
 					+ coins.get(i).getPixelMatrix().rows());
 			System.out.println("coins[i].getPixelMatrix().cols():"
 					+ coins.get(i).getPixelMatrix().cols());
-			switch (CoinProcessor.getInstance(storage).getCoinType(
+			switch (CoinProcessor.getInstance().getCoinType(
 					coins.get(i).getPixelMatrix())) {
 			case OneFront:
 				coinValues[i] = 1;
